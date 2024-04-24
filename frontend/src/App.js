@@ -20,6 +20,10 @@ import EditProduct from "./pages/editProduct/EditProduct";
 import Profile from "./pages/profile/Profile";
 import EditProfile from "./pages/profile/EditProfile";
 import Contact from "./pages/contact/Contact";
+import Suppliers from "./pages/suppliers/Suppliers";
+import SupplierDetail from "./components/supplier/supplierDetail/SupplierDetail";
+import EditSupplier from "./pages/editSupplier/EditSupplier";
+import AddSupplier from "./pages/addSupplier/AddSupplier";
 
 axios.defaults.withCredentials = true;
 
@@ -110,6 +114,46 @@ function App() {
             <Sidebar>
               <Layout>
                 <Contact />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/suppliers"
+          element={
+            <Sidebar>
+              <Layout>
+                <Suppliers />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/supplier-detail/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <SupplierDetail />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/edit-supplier/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <EditSupplier />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/add-supplier"
+          element={
+            <Sidebar>
+              <Layout>
+                <AddSupplier />
               </Layout>
             </Sidebar>
           }

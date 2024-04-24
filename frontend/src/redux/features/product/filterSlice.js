@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   filteredProducts: [],
+  filteredSuppliers: [],
 };
 
 const filterSlice = createSlice({
@@ -18,11 +19,21 @@ const filterSlice = createSlice({
 
       state.filteredProducts = tempProducts;
     },
+    FILTER_SUPPLIERS(state, action) {
+      const { suppliers, search } = action.payload;
+      const tempSuppliers = suppliers.filter((supplier) =>
+        supplier.name.toLowerCase().includes(search.toLowerCase())
+      );
+
+      state.filteredSuppliers = tempSuppliers;
+    },
   },
 });
 
-export const { FILTER_PRODUCTS } = filterSlice.actions;
+export const { FILTER_PRODUCTS, FILTER_SUPPLIERS } = filterSlice.actions;
 
 export const selectFilteredPoducts = (state) => state.filter.filteredProducts;
+export const selectFilteredSuppliers = (state) =>
+  state.filter.filteredSuppliers;
 
 export default filterSlice.reducer;

@@ -1,4 +1,4 @@
-import { FaTh, FaRegChartBar, FaCommentAlt } from "react-icons/fa";
+import { FaTh, FaRegChartBar, FaCommentAlt, FaTruckMoving } from "react-icons/fa";
 import { BiImageAdd } from "react-icons/bi";
 
 const menu = [
@@ -11,6 +11,11 @@ const menu = [
     title: "Agregar Producto",
     icon: <BiImageAdd />,
     path: "/add-product",
+  },
+  {
+    title: "Proveedores",
+    icon: <FaTruckMoving />,
+    path: "/suppliers",
   },
   {
     title: "Cuenta",
