@@ -7,20 +7,20 @@ import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-  FILTER_SUPPLIERS,
-  selectFilteredSuppliers,
+  FILTER_CLIENTS,
+  selectFilteredClients,
 } from "../../../redux/features/product/filterSlice";
 import {
-  deleteSupplier,
-  getSuppliers,
-} from "../../../redux/features/supplier/supplierSlice";
+  deleteClient,
+  getClients,
+} from "../../../redux/features/client/clientSlice";
 import { SpinnerImg } from "../../loader/Loader";
 import Search from "../../search/Search";
-import "./supplierList.scss";
+import "./clientList.scss";
 
-const SupplierList = ({ suppliers, isLoading }) => {
+const ClientList = ({ clients, isLoading }) => {
   const [search, setSearch] = useState("");
-  const filteredSuppliers = useSelector(selectFilteredSuppliers);
+  const filteredClients = useSelector(selectFilteredClients);
 
   const dispatch = useDispatch();
 
@@ -34,29 +34,29 @@ const SupplierList = ({ suppliers, isLoading }) => {
 
   const getType = (type) => {
     const types = {
-      0: "Fabrica",
-      1: "Importador",
-      2: "Distribuidor",
+      0: "Mayorista",
+      1: "Minorista",
+      2: "E-Commerce",
       3: "Otros",
     };
 
     return types[type];
   };
 
-  const delSupplier = async (id) => {
+  const delClient = async (id) => {
     console.log(id);
-    await dispatch(deleteSupplier(id));
-    await dispatch(getSuppliers());
+    await dispatch(deleteClient(id));
+    await dispatch(getClients());
   };
 
   const confirmDelete = (id) => {
     confirmAlert({
-      title: "Delete Supplier",
-      message: "Are you sure you want to delete this supplier.",
+      title: "Delete Client",
+      message: "Are you sure you want to delete this client.",
       buttons: [
         {
           label: "Delete",
-          onClick: () => delSupplier(id),
+          onClick: () => delClient(id),
         },
         {
           label: "Cancel",
@@ -75,28 +75,27 @@ const SupplierList = ({ suppliers, isLoading }) => {
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
 
-    setCurrentItems(filteredSuppliers.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(filteredSuppliers.length / itemsPerPage));
-  }, [itemOffset, itemsPerPage, filteredSuppliers]);
+    setCurrentItems(filteredClients.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(filteredClients.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, filteredClients]);
 
   const handlePageClick = (event) => {
-    const newOffset =
-      (event.selected * itemsPerPage) % filteredSuppliers.length;
+    const newOffset = (event.selected * itemsPerPage) % filteredClients.length;
     setItemOffset(newOffset);
   };
   //   End Pagination
 
   useEffect(() => {
-    dispatch(FILTER_SUPPLIERS({ suppliers, search }));
-  }, [suppliers, search, dispatch]);
+    dispatch(FILTER_CLIENTS({ clients, search }));
+  }, [clients, search, dispatch]);
 
   return (
-    <div className="supplier-list">
+    <div className="client-list">
       <hr />
       <div className="table">
         <div className="--flex-between --flex-dir-column">
           <span>
-            <h3>Proveedores</h3>
+            <h3>Clientes</h3>
           </span>
           <span>
             <Search
@@ -107,9 +106,9 @@ const SupplierList = ({ suppliers, isLoading }) => {
         </div>
 
         <div className="--flex-end">
-          <Link to={`/add-supplier`}>
+          <Link to={`/add-client`}>
             <button type="button" className="--btn --btn-primary">
-              Nuevo proveedor
+              Nuevo cliente
             </button>
           </Link>
         </div>
@@ -117,36 +116,27 @@ const SupplierList = ({ suppliers, isLoading }) => {
         {isLoading && <SpinnerImg />}
 
         <div className="table">
-          {!isLoading && suppliers.length === 0 ? (
-            <p>-- No supplier found, please add a supplier...</p>
+          {!isLoading && clients.length === 0 ? (
+            <p>-- No client found, please add a client...</p>
           ) : (
             <table>
               <thead>
                 <tr>
                   <th>s/n</th>
-                  <th>Nombre empresa</th>
+                  <th>Nombre Cliente</th>
                   <th>CUIT</th>
                   <th>Telefono</th>
                   <th>Email</th>
-                  <th>Tipo de Proveedor</th>
+                  <th>Tipo de Cliente</th>
                   <th>Persona de contacto</th>
-                  <th>Proveedor Calificado</th>
                   <th>Accion</th>
                 </tr>
               </thead>
 
               <tbody>
-                {currentItems.map((supplier, index) => {
-                  const {
-                    _id,
-                    name,
-                    cuit,
-                    phone,
-                    email,
-                    type,
-                    contact,
-                    qualified,
-                  } = supplier;
+                {currentItems.map((client, index) => {
+                  const { _id, name, cuit, phone, email, type, contact } =
+                    client;
                   return (
                     <tr key={_id}>
                       <td>{index + 1}</td>
@@ -156,15 +146,14 @@ const SupplierList = ({ suppliers, isLoading }) => {
                       <td>{email}</td>
                       <td>{getType(type)}</td>
                       <td>{contact}</td>
-                      <td>{qualified ? "Si" : "No"}</td>
                       <td className="icons">
                         <span>
-                          <Link to={`/supplier-detail/${_id}`}>
+                          <Link to={`/client-detail/${_id}`}>
                             <AiOutlineEye size={25} color={"purple"} />
                           </Link>
                         </span>
                         <span>
-                          <Link to={`/edit-supplier/${_id}`}>
+                          <Link to={`/edit-client/${_id}`}>
                             <FaEdit size={20} color={"green"} />
                           </Link>
                         </span>
@@ -202,4 +191,4 @@ const SupplierList = ({ suppliers, isLoading }) => {
   );
 };
 
-export default SupplierList;
+export default ClientList;

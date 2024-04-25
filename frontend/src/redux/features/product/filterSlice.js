@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   filteredProducts: [],
   filteredSuppliers: [],
+  filteredClients: [],
 };
 
 const filterSlice = createSlice({
@@ -27,13 +28,23 @@ const filterSlice = createSlice({
 
       state.filteredSuppliers = tempSuppliers;
     },
+    FILTER_CLIENTS(state, action) {
+      const { clients, search } = action.payload;
+      const tempClients = clients.filter((client) =>
+        client.name.toLowerCase().includes(search.toLowerCase())
+      );
+
+      state.filteredClients = tempClients;
+    },
   },
 });
 
-export const { FILTER_PRODUCTS, FILTER_SUPPLIERS } = filterSlice.actions;
+export const { FILTER_PRODUCTS, FILTER_SUPPLIERS, FILTER_CLIENTS } =
+  filterSlice.actions;
 
 export const selectFilteredPoducts = (state) => state.filter.filteredProducts;
 export const selectFilteredSuppliers = (state) =>
   state.filter.filteredSuppliers;
+export const selectFilteredClients = (state) => state.filter.filteredClients;
 
 export default filterSlice.reducer;
