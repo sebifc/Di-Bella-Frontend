@@ -1,6 +1,7 @@
 import { BiImageAdd } from "react-icons/bi";
 import {
   FaCommentAlt,
+  FaReceipt,
   FaRegChartBar,
   FaTh,
   FaTruckMoving,
@@ -27,6 +28,11 @@ const menu = [
     title: "Clientes",
     icon: <FaUsers />,
     path: "/clients",
+  },
+  {
+    title: "Pedidos",
+    icon: <FaReceipt />,
+    path: "/orders",
   },
   {
     title: "Cuenta",
