@@ -20,6 +20,18 @@ import EditProduct from "./pages/editProduct/EditProduct";
 import Profile from "./pages/profile/Profile";
 import EditProfile from "./pages/profile/EditProfile";
 import Contact from "./pages/contact/Contact";
+import Suppliers from "./pages/suppliers/Suppliers";
+import SupplierDetail from "./components/supplier/supplierDetail/SupplierDetail";
+import EditSupplier from "./pages/editSupplier/EditSupplier";
+import AddSupplier from "./pages/addSupplier/AddSupplier";
+import Clients from "./pages/clients/Clients";
+import ClientDetail from "./components/client/clientDetail/ClientDetail";
+import EditClient from "./pages/editClient/EditClient";
+import AddClient from "./pages/addClient/AddClient";
+import Orders from "./pages/orders/Orders";
+import OrderDetail from "./components/order/orderDetail/OrderDetail";
+import EditOrder from "./pages/editOrder/EditOrder";
+import AddOrder from "./pages/addOrder/AddOrder";
 
 axios.defaults.withCredentials = true;
 
@@ -110,6 +122,126 @@ function App() {
             <Sidebar>
               <Layout>
                 <Contact />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/suppliers"
+          element={
+            <Sidebar>
+              <Layout>
+                <Suppliers />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/supplier-detail/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <SupplierDetail />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/edit-supplier/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <EditSupplier />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/add-supplier"
+          element={
+            <Sidebar>
+              <Layout>
+                <AddSupplier />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/clients"
+          element={
+            <Sidebar>
+              <Layout>
+                <Clients />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/client-detail/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <ClientDetail />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/edit-client/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <EditClient />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/add-client"
+          element={
+            <Sidebar>
+              <Layout>
+                <AddClient />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <Sidebar>
+              <Layout>
+                <Orders />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/order-detail/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <OrderDetail />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/edit-order/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <EditOrder />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/add-order"
+          element={
+            <Sidebar>
+              <Layout>
+                <AddOrder />
               </Layout>
             </Sidebar>
           }
