@@ -29,7 +29,9 @@ import ClientDetail from "./components/client/clientDetail/ClientDetail";
 import EditClient from "./pages/editClient/EditClient";
 import AddClient from "./pages/addClient/AddClient";
 import Orders from "./pages/orders/Orders";
-// import OrderDetail from "./components/order/orderDetail/OrderDetail";
+import OrderDetail from "./components/order/orderDetail/OrderDetail";
+import EditOrder from "./pages/editOrder/EditOrder";
+import AddOrder from "./pages/addOrder/AddOrder";
 
 axios.defaults.withCredentials = true;
 
@@ -214,7 +216,7 @@ function App() {
             </Sidebar>
           }
         />
-        {/* <Route
+        <Route
           path="/order-detail/:id"
           element={
             <Sidebar>
@@ -223,7 +225,27 @@ function App() {
               </Layout>
             </Sidebar>
           }
-        /> */}
+        />
+        <Route
+          path="/edit-order/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <EditOrder />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/add-order"
+          element={
+            <Sidebar>
+              <Layout>
+                <AddOrder />
+              </Layout>
+            </Sidebar>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

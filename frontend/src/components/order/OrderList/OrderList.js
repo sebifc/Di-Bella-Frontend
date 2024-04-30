@@ -7,10 +7,7 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  deleteOrder,
-  getOrders,
-} from "../../../redux/features/order/orderSlice";
+import { deleteOrder } from "../../../redux/features/order/orderSlice";
 import {
   FILTER_ORDERS,
   selectFilteredOrders,
@@ -19,7 +16,7 @@ import { SpinnerImg } from "../../loader/Loader";
 import Search from "../../search/Search";
 import "./OrderList.scss";
 
-const OrderList = ({ orders, isLoading, suppliers }) => {
+const OrderList = ({ orders, isLoading }) => {
   const [search, setSearch] = useState("");
   const filteredOrders = useSelector(selectFilteredOrders);
 
@@ -28,7 +25,6 @@ const OrderList = ({ orders, isLoading, suppliers }) => {
   const delOrder = async (id) => {
     console.log(id);
     await dispatch(deleteOrder(id));
-    await dispatch(getOrders());
   };
 
   const confirmDelete = (id) => {
@@ -89,7 +85,7 @@ const OrderList = ({ orders, isLoading, suppliers }) => {
         <div className="--flex-end">
           <Link to={`/add-order`}>
             <button type="button" className="--btn --btn-primary">
-              Nueva compra
+              Cargar compra
             </button>
           </Link>
         </div>
@@ -108,7 +104,7 @@ const OrderList = ({ orders, isLoading, suppliers }) => {
                   <th>Proveedor</th>
                   <th>Vencimiento</th>
                   <th>Lote</th>
-                  <th>Codigo</th>
+                  <th>Producto</th>
                   <th>Modificado por</th>
                   <th>Accion</th>
                 </tr>
@@ -124,16 +120,16 @@ const OrderList = ({ orders, isLoading, suppliers }) => {
                     expiration,
                     batch,
                     user_name,
+                    product,
                   } = order;
-                  const supp = suppliers.find((s) => s._id === supplier);
                   return (
                     <tr key={_id}>
                       <td>{invoiceNumber}</td>
                       <td>{brand}</td>
-                      <td>{supp?.name}</td>
+                      <td>{supplier.name}</td>
                       <td>{moment(expiration).format("DD/MM/YYYY")}</td>
                       <td>{batch}</td>
-                      <td>{supp?.code}</td>
+                      <td>{product.name}</td>
                       <td>{user_name}</td>
                       <td className="icons">
                         <span>

@@ -4,7 +4,6 @@ import OrderList from "../../components/order/OrderList/OrderList";
 import useRedirectLoggedOutUser from "../../customHook/useRedirectLoggedOutUser";
 import { selectIsLoggedIn } from "../../redux/features/auth/authSlice";
 import { getOrders } from "../../redux/features/order/orderSlice";
-import { getSuppliers } from "../../redux/features/supplier/supplierSlice";
 
 const Orders = () => {
   useRedirectLoggedOutUser("/login");
@@ -14,12 +13,10 @@ const Orders = () => {
   const { orders, isLoading, isError, message } = useSelector(
     (state) => state.order
   );
-  const { suppliers } = useSelector((state) => state.supplier);
 
   useEffect(() => {
     if (isLoggedIn === true) {
       dispatch(getOrders());
-      dispatch(getSuppliers());
     }
 
     if (isError) {
@@ -29,7 +26,7 @@ const Orders = () => {
 
   return (
     <div>
-      <OrderList orders={orders} isLoading={isLoading} suppliers={suppliers} />
+      <OrderList orders={orders} isLoading={isLoading} />
     </div>
   );
 };

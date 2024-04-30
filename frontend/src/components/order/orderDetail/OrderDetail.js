@@ -1,3 +1,4 @@
+import moment from "moment";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -7,7 +8,6 @@ import { getOrder } from "../../../redux/features/order/orderSlice";
 import Card from "../../card/Card";
 import { SpinnerImg } from "../../loader/Loader";
 import "./OrderDetail.scss";
-import { getSupplier } from "../../../redux/features/supplier/supplierSlice";
 
 const OrderDetail = () => {
   useRedirectLoggedOutUser("/login");
@@ -19,15 +19,10 @@ const OrderDetail = () => {
   const { order, isLoading, isError, message } = useSelector(
     (state) => state.order
   );
-  // TODO : get supplier
-  const { supplier } = useSelector(
-    (state) => state.supplier
-  );
 
   useEffect(() => {
     if (isLoggedIn === true) {
       dispatch(getOrder(id));
-      dispatch(getSupplier(id));
     }
 
     if (isError) {
@@ -43,25 +38,27 @@ const OrderDetail = () => {
         {order && (
           <div className="detail">
             <h4>
-              <span className="badge">Nombre: </span> &nbsp; {order.name}
+              <span className="badge">Factura de Compra Nro: </span> &nbsp;{" "}
+              {order.invoiceNumber}
             </h4>
             <p>
-              <b>&rarr; Razón Social : </b> {order.businessName}
+              <b>&rarr; Marca : </b> {order.brand}
             </p>
             <p>
-              <b>&rarr; CUIT : </b> {order.cuit}
+              <b>&rarr; Proveedor : </b> {order.supplier.name}
             </p>
             <p>
-              <b>&rarr; Contacto : </b> {order.contact}
+              <b>&rarr; Vencimiento : </b>{" "}
+              {moment(order.expiration).format("DD/MM/YYYY")}
             </p>
             <p>
-              <b>&rarr; Dirección : </b> {order.address}
+              <b>&rarr; Lote : </b> {order.batch}
             </p>
             <p>
-              <b>&rarr; Email : </b> {order.email}
+              <b>&rarr; Producto : </b> {order.product.name}
             </p>
             <p>
-              <b>&rarr; Telefono : </b> {order.phone}
+              <b>&rarr; Fecha de Compra : </b> {order.date}
             </p>
             <hr />
             <code className="--color-dark">
