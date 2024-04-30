@@ -44,6 +44,22 @@ const OrderForm = ({ order, handleInputChange, saveOrder }) => {
     messageSupplier,
   ]);
 
+  const validateButton = () => {
+    if (
+      !order?.date ||
+      !order?.brand ||
+      !order?.batch ||
+      !order?.expiration ||
+      !order?.invoiceNumber ||
+      !order?.product ||
+      !order?.supplier
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <div className="add-order">
       {isLoadingProduct && <Loader />}
@@ -105,7 +121,9 @@ const OrderForm = ({ order, handleInputChange, saveOrder }) => {
             onChange={handleInputChange}
             placeholder="Producto"
           >
-            <option value="">Seleccionar</option>
+            <option value="">
+              {products?.length === 0 ? "No hay productos" : "Seleccionar"}
+            </option>
             {products?.map((product) => (
               <option key={product._id} value={product._id}>
                 {product.name}
@@ -120,7 +138,9 @@ const OrderForm = ({ order, handleInputChange, saveOrder }) => {
             onChange={handleInputChange}
             placeholder="Proveedor"
           >
-            <option value="">Seleccionar</option>
+            <option value="">
+              {suppliers?.length === 0 ? "No hay proveedores" : "Seleccionar"}
+            </option>
             {suppliers?.map((supp) => (
               <option key={supp._id} value={supp._id}>
                 {supp.name}
@@ -128,10 +148,12 @@ const OrderForm = ({ order, handleInputChange, saveOrder }) => {
             ))}
           </select>
 
-          <pre>{JSON.stringify(order, null, 4)}</pre>
-
           <div className="--my">
-            <button type="submit" className="--btn --btn-primary">
+            <button
+              type="submit"
+              className="--btn --btn-primary"
+              disabled={validateButton()}
+            >
               Guardar Compra
             </button>
           </div>
