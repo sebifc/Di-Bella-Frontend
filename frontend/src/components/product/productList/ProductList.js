@@ -91,6 +91,7 @@ const ProductList = ({ products, isLoading }) => {
             <Search
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              placeholder={"Buscar productos"}
             />
           </span>
         </div>

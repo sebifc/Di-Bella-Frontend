@@ -101,6 +101,7 @@ const ClientList = ({ clients, isLoading }) => {
             <Search
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              placeholder={"Buscar cliente"}
             />
           </span>
         </div>

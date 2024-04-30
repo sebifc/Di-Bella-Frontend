@@ -102,6 +102,7 @@ const SupplierList = ({ suppliers, isLoading }) => {
             <Search
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              placeholder={"Buscar proveedor"}
             />
           </span>
         </div>

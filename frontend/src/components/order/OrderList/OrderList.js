@@ -78,6 +78,7 @@ const OrderList = ({ orders, isLoading }) => {
             <Search
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              placeholder={"Buscar compra"}
             />
           </span>
         </div>
