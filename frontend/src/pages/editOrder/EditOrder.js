@@ -26,7 +26,13 @@ const EditOrder = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    setOrder(orderEdit);
+    if (orderEdit) {
+      setOrder({
+        ...orderEdit,
+        product: orderEdit?.product?.map((product) => product._id),
+        supplier: orderEdit?.supplier?.map((supplier) => supplier._id),
+      });
+    }
   }, [orderEdit]);
 
   const handleInputChange = (e) => {
@@ -34,42 +40,44 @@ const EditOrder = () => {
     setOrder({ ...order, [name]: value });
   };
 
+  const handeSelectChange = (e, name) => {
+    setOrder({ ...order, [name]: e.map((e) => e.value) });
+  };
+
   const saveOrder = async (e) => {
     e.preventDefault();
+    console.log(order);
     const formData = new FormData();
     formData.append("date", order?.date);
     formData.append("brand", order?.brand);
     formData.append("batch", order?.batch);
     formData.append("expiration", order?.expiration);
     formData.append("invoiceNumber", order?.invoiceNumber);
-    formData.append(
-      "product",
-      typeof order?.product === "object" && order?.product !== null
-        ? order?.product?._id
-        : order?.product
-    );
-    formData.append(
-      "supplier",
-      typeof order?.supplier === "object" && order?.supplier !== null
-        ? order?.supplier?._id
-        : order?.supplier
-    );
+    formData.append("product", JSON.stringify(order?.product));
+    formData.append("supplier", JSON.stringify(order?.supplier));
 
     await dispatch(updateOrder({ id, formData }));
     await dispatch(getOrders());
     navigate("/orders");
   };
 
+  /* console.log(order); */
+
   return (
     <div>
       {isLoading && <Loader />}
       <h3 className="--mt">Editar Compra</h3>
 
-      <OrderForm
-        order={order}
-        handleInputChange={handleInputChange}
-        saveOrder={saveOrder}
-      />
+      {order && (
+        <OrderForm
+          order={order}
+          handleInputChange={handleInputChange}
+          handeSelectChange={handeSelectChange}
+          saveOrder={saveOrder}
+        />
+      )}
+
+      <pre>{JSON.stringify(order, null, 2)}</pre>
     </div>
   );
 };

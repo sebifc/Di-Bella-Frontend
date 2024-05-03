@@ -25,6 +25,7 @@ const OrderList = ({ orders, isLoading }) => {
   const delOrder = async (id) => {
     console.log(id);
     await dispatch(deleteOrder(id));
+    await dispatch(FILTER_ORDERS({ orders, search }));
   };
 
   const confirmDelete = (id) => {
@@ -66,6 +67,16 @@ const OrderList = ({ orders, isLoading }) => {
     dispatch(FILTER_ORDERS({ orders, search }));
   }, [orders, search, dispatch]);
 
+  const getSuppliersNames = (suppliers) => {
+    const supplierNames = suppliers.map((supplier) => supplier.name);
+    return supplierNames.join(", ");
+  };
+
+  const getProductsNames = (products) => {
+    const productNames = products.map((product) => product.name);
+    return productNames.join(", ");
+  };
+
   return (
     <div className="order-list">
       <hr />
@@ -102,10 +113,10 @@ const OrderList = ({ orders, isLoading }) => {
                 <tr>
                   <th>Factura de Compra Nro</th>
                   <th>Marca</th>
-                  <th>Proveedor</th>
+                  <th>Proveedores</th>
                   <th>Vencimiento</th>
                   <th>Lote</th>
-                  <th>Producto</th>
+                  <th>Productos</th>
                   <th>Modificado por</th>
                   <th>Accion</th>
                 </tr>
@@ -127,10 +138,10 @@ const OrderList = ({ orders, isLoading }) => {
                     <tr key={_id}>
                       <td>{invoiceNumber}</td>
                       <td>{brand}</td>
-                      <td>{supplier.name}</td>
+                      <td>{getSuppliersNames(supplier)}</td>
                       <td>{moment(expiration).format("DD/MM/YYYY")}</td>
                       <td>{batch}</td>
-                      <td>{product.name}</td>
+                      <td>{getProductsNames(product)}</td>
                       <td>{user_name}</td>
                       <td className="icons">
                         <span>

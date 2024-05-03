@@ -8,8 +8,14 @@ import Card from "../../card/Card";
 import Loader from "../../loader/Loader";
 import "./OrderForm.scss";
 import moment from "moment";
+import Select from "react-select";
 
-const OrderForm = ({ order, handleInputChange, saveOrder }) => {
+const OrderForm = ({
+  order,
+  handleInputChange,
+  saveOrder,
+  handeSelectChange,
+}) => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const {
@@ -51,13 +57,35 @@ const OrderForm = ({ order, handleInputChange, saveOrder }) => {
       !order?.batch ||
       !order?.expiration ||
       !order?.invoiceNumber ||
-      !order?.product ||
-      !order?.supplier
+      order?.product?.length === 0 ||
+      order?.supplier?.length === 0
     ) {
       return true;
     } else {
       return false;
     }
+  };
+
+  const getDefaultValueSupplier = () => {
+    return order?.supplier?.length > 0
+      ? suppliers
+          .filter((supplier) => order?.supplier?.includes(supplier._id))
+          .map((supplier) => ({
+            value: supplier._id,
+            label: supplier.name,
+          }))
+      : null;
+  };
+
+  const getDefaultValueProduct = () => {
+    return order?.product?.length > 0
+      ? products
+          .filter((product) => order?.product?.includes(product._id))
+          .map((product) => ({
+            value: product._id,
+            label: product.name,
+          }))
+      : null;
   };
 
   return (
@@ -115,7 +143,19 @@ const OrderForm = ({ order, handleInputChange, saveOrder }) => {
           />
 
           <label>Producto</label>
-          <select
+          <Select
+            value={getDefaultValueProduct()}
+            isMulti
+            name="product"
+            options={products.map((product) => ({
+              value: product._id,
+              label: product.name,
+            }))}
+            onChange={(value) => handeSelectChange(value, "product")}
+            className="basic-multi-select"
+            classNamePrefix="select"
+          />
+          {/* <select
             name="product"
             value={order?.product?._id}
             onChange={handleInputChange}
@@ -129,10 +169,22 @@ const OrderForm = ({ order, handleInputChange, saveOrder }) => {
                 {product.name}
               </option>
             ))}
-          </select>
+          </select> */}
 
           <label>Proveedor</label>
-          <select
+          <Select
+            value={getDefaultValueSupplier()}
+            isMulti
+            name="supplier"
+            options={suppliers.map((supp) => ({
+              value: supp._id,
+              label: supp.name,
+            }))}
+            onChange={(value) => handeSelectChange(value, "supplier")}
+            className="basic-multi-select"
+            classNamePrefix="select"
+          />
+          {/* <select
             name="supplier"
             value={order?.supplier?._id}
             onChange={handleInputChange}
@@ -146,7 +198,7 @@ const OrderForm = ({ order, handleInputChange, saveOrder }) => {
                 {supp.name}
               </option>
             ))}
-          </select>
+          </select> */}
 
           <div className="--my">
             <button

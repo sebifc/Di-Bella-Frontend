@@ -30,6 +30,16 @@ const OrderDetail = () => {
     }
   }, [isLoggedIn, isError, message, dispatch]);
 
+  const getSuppliersNames = (suppliers) => {
+    const supplierNames = suppliers.map((supplier) => supplier.name);
+    return supplierNames.join(", ");
+  };
+
+  const getProductsNames = (products) => {
+    const productNames = products.map((product) => product.name);
+    return productNames.join(", ");
+  };
+
   return (
     <div className="order-detail">
       <h3 className="--mt">Detalle de la compra</h3>
@@ -45,7 +55,7 @@ const OrderDetail = () => {
               <b>&rarr; Marca : </b> {order.brand}
             </p>
             <p>
-              <b>&rarr; Proveedor : </b> {order.supplier.name}
+              <b>&rarr; Proveedores : </b> {getSuppliersNames(order.supplier)}
             </p>
             <p>
               <b>&rarr; Vencimiento : </b>{" "}
@@ -55,7 +65,7 @@ const OrderDetail = () => {
               <b>&rarr; Lote : </b> {order.batch}
             </p>
             <p>
-              <b>&rarr; Producto : </b> {order.product.name}
+              <b>&rarr; Productos : </b> {getProductsNames(order.product)}
             </p>
             <p>
               <b>&rarr; Fecha de Compra : </b> {order.date}

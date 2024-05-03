@@ -30,6 +30,10 @@ const AddOrder = () => {
     setOrder({ ...order, [name]: value });
   };
 
+  const handeSelectChange = (e, name) => {
+    setOrder({ ...order, [name]: e.map((e) => e.value) });
+  };
+
   const saveOrder = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -39,8 +43,8 @@ const AddOrder = () => {
     formData.append("batch", order?.batch);
     formData.append("expiration", order?.expiration);
     formData.append("invoiceNumber", order?.invoiceNumber);
-    formData.append("product", order?.product);
-    formData.append("supplier", order?.supplier);
+    formData.append("product", JSON.stringify(order?.product));
+    formData.append("supplier", JSON.stringify(order?.supplier));
 
     console.log(...formData);
 
@@ -56,6 +60,7 @@ const AddOrder = () => {
       <OrderForm
         order={order}
         handleInputChange={handleInputChange}
+        handeSelectChange={handeSelectChange}
         saveOrder={saveOrder}
       />
     </div>
