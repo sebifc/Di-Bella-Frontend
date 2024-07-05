@@ -8,9 +8,23 @@ const ClientForm = ({ client, handleInputChange, saveClient }) => {
   const types = {
     0: "Mayorista",
     1: "Minorista",
-    2: "E-Commerce",
-    3: "Otros",
   };
+  const originContacts = {
+    0: "Fernando Pazzano",
+    1: "Lucila Di Bella",
+    2: "Vendedor externo",
+    3: "Redes sociales",
+    4: "Mercado Libre",
+  };
+
+  const paymentConditions = {
+    0: "Efectivo contra entrega",
+    1: "Transferencia contranetrega",
+    2: "Transferencia a 30 dias",
+    3: "Cheque a 30 dias",
+    4: "Cheque a 60 dias",
+  };
+
   return (
     <div className="add-client">
       <Card cardClass={"card"}>
@@ -20,6 +34,7 @@ const ClientForm = ({ client, handleInputChange, saveClient }) => {
             type="text"
             placeholder="Nombre del Cliente"
             name="name"
+            required
             value={client?.name}
             onChange={handleInputChange}
           />
@@ -69,6 +84,24 @@ const ClientForm = ({ client, handleInputChange, saveClient }) => {
             onChange={handleInputChange}
           />
 
+          <label>Email 2 del Cliente:</label>
+          <input
+            type="email"
+            placeholder="Email 2 del Cliente"
+            name="email2"
+            value={client?.email2}
+            onChange={handleInputChange}
+          />
+
+          <label>Email 3 del Cliente:</label>
+          <input
+            type="email"
+            placeholder="Email 3 del Cliente"
+            name="email3"
+            value={client?.email3}
+            onChange={handleInputChange}
+          />
+
           <label>Localidad del Cliente:</label>
           <input
             type="text"
@@ -97,6 +130,34 @@ const ClientForm = ({ client, handleInputChange, saveClient }) => {
             {Object.keys(types).map((key) => (
               <option key={key} value={key}>
                 {types[key]}
+              </option>
+            ))}
+          </select>
+
+          <label>Origen del contacto</label>
+          <select
+            name="originContact"
+            value={client?.originContact}
+            onChange={handleInputChange}
+            placeholder="Origen del contacto"
+          >
+            {Object.keys(originContacts).map((key) => (
+              <option key={key} value={key}>
+                {originContacts[key]}
+              </option>
+            ))}
+          </select>
+
+          <label>Condición de pago acordada</label>
+          <select
+            name="paymentCondition"
+            value={client?.paymentCondition}
+            onChange={handleInputChange}
+            placeholder="Condición de pago acordada"
+          >
+            {Object.keys(paymentConditions).map((key) => (
+              <option key={key} value={key}>
+                {paymentConditions[key]}
               </option>
             ))}
           </select>

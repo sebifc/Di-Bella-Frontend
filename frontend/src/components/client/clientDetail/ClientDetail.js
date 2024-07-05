@@ -33,11 +33,33 @@ const ClientDetail = () => {
     const types = {
       0: "Mayorista",
       1: "Minorista",
-      2: "E-Commerce",
-      3: "Otros",
     };
 
     return types[client.type];
+  };
+
+  const getOriginContact = () => {
+    const origins = {
+      0: "Fernando Pazzano",
+      1: "Lucila Di Bella",
+      2: "Vendedor externo",
+      3: "Redes sociales",
+      4: "Mercado Libre",
+    };
+
+    return origins[client.originContact];
+  };
+
+  const getPaymentCondition = () => {
+    const conditions = {
+      0: "Efectivo contra entrega",
+      1: "Transferencia contranetrega",
+      2: "Transferencia a 30 dias",
+      3: "Cheque a 30 dias",
+      4: "Cheque a 60 dias",
+    };
+
+    return conditions[client.paymentCondition];
   };
 
   return (
@@ -66,10 +88,23 @@ const ClientDetail = () => {
               <b>&rarr; Email : </b> {client.email}
             </p>
             <p>
+              <b>&rarr; Email 2 : </b> {client.email2}
+            </p>
+            <p>
+              <b>&rarr; Email 3 : </b> {client.email3}
+            </p>
+            <p>
               <b>&rarr; Telefono : </b> {client.phone}
             </p>
             <p>
               <b>&rarr; Tipo : </b> {getType()}
+            </p>
+            <p>
+              <b>&rarr; Origen del contacto : </b> {getOriginContact()}
+            </p>
+            <p>
+              <b>&rarr; Condición de pago acordada : </b>{" "}
+              {getPaymentCondition()}
             </p>
             <hr />
             <code className="--color-dark">

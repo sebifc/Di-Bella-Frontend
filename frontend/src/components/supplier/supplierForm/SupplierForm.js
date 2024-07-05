@@ -18,6 +18,7 @@ const SupplierForm = ({ supplier, handleInputChange, saveSupplier }) => {
         <form onSubmit={saveSupplier}>
           <label>Nombre del Proveedor:</label>
           <input
+            required
             type="text"
             placeholder="Nombre del Proveedor"
             name="name"
