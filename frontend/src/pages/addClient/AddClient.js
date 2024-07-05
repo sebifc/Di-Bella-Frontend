@@ -15,9 +15,13 @@ const initialState = {
   contact: "",
   address: "",
   email: "",
+  email2: "",
+  email3: "",
   location: "",
   phone: 0,
   type: 0,
+  originContact: 0,
+  paymentCondition: 0,
 };
 
 const AddClient = () => {
@@ -41,9 +45,13 @@ const AddClient = () => {
     formData.append("contact", client?.contact);
     formData.append("address", client?.address);
     formData.append("email", client?.email);
+    formData.append("email2", client?.email2);
+    formData.append("email3", client?.email3);
     formData.append("location", client?.location);
     formData.append("phone", client?.phone);
     formData.append("type", client?.type);
+    formData.append("originContact", client?.originContact);
+    formData.append("paymentCondition", client?.paymentCondition);
 
     console.log(...formData);
 
