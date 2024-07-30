@@ -78,6 +78,9 @@ const SupplierDetail = () => {
             <p>
               <b>&rarr; Código : </b> {supplier.code}
             </p>
+            <p>
+              <b>&rarr; Descripción : </b> {supplier.description}
+            </p>
             <hr />
             <code className="--color-dark">
               Created on: {supplier.createdAt.toLocaleString("en-US")}

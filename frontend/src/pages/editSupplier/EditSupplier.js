@@ -47,6 +47,7 @@ const EditSupplier = () => {
     formData.append("qualified", supplier?.qualified);
     formData.append("type", supplier?.type);
     formData.append("code", supplier?.code);
+    formData.append("description", supplier?.description);
 
     console.log(...formData);
 

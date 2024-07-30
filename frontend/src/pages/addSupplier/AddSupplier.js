@@ -19,6 +19,7 @@ const initialState = {
   qualified: false,
   type: 0,
   code: "",
+  description: "",
 };
 
 const AddSupplier = () => {
@@ -46,6 +47,7 @@ const AddSupplier = () => {
     formData.append("qualified", supplier?.qualified);
     formData.append("type", supplier?.type);
     formData.append("code", supplier?.code);
+    formData.append("description", supplier?.description);
 
     console.log(...formData);
 
