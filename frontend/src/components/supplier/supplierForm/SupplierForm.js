@@ -114,6 +114,14 @@ const SupplierForm = ({ supplier, handleInputChange, saveSupplier }) => {
             onChange={handleInputChange}
           />
 
+          <label>Descripción</label>
+          <textarea
+            placeholder="Descripción"
+            name="description"
+            value={supplier?.description}
+            onChange={handleInputChange}
+          />
+
           <div className="--my">
             <button type="submit" className="--btn --btn-primary">
               Save Supplier
