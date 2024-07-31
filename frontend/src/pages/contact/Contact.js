@@ -63,7 +63,7 @@ const Contact = () => {
             <div className="icons">
               <span>
                 <FaPhoneAlt />
-                <p>+31 (0) 61227-1332</p>
+                <p>+111111111</p>
               </span>
               <span>
                 <FaEnvelope />
@@ -71,11 +71,11 @@ const Contact = () => {
               </span>
               <span>
                 <GoLocation />
-                <p>Eindhoven, The Netherlands</p>
+                <p>Worlwide</p>
               </span>
               <span>
                 <FaTwitter />
-                <p>@sebifc</p>
+                <p>@support</p>
               </span>
             </div>
           </Card>
