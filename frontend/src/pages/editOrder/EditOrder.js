@@ -29,7 +29,7 @@ const EditOrder = () => {
     if (orderEdit) {
       setOrder({
         ...orderEdit,
-        product: orderEdit?.product?.map((product) => product._id),
+        sku: orderEdit?.sku?.map((sku) => sku._id),
         supplier: orderEdit?.supplier?.map((supplier) => supplier._id),
       });
     }
@@ -46,22 +46,25 @@ const EditOrder = () => {
 
   const saveOrder = async (e) => {
     e.preventDefault();
-    console.log(order);
     const formData = new FormData();
-    formData.append("date", order?.date);
+
+    formData.append("sku", JSON.stringify(order?.sku));
+    formData.append("minimumUnit", order?.minimumUnit);
     formData.append("brand", order?.brand);
+    formData.append("ean13", order?.ean13);
     formData.append("batch", order?.batch);
     formData.append("expiration", order?.expiration);
-    formData.append("invoiceNumber", order?.invoiceNumber);
-    formData.append("product", JSON.stringify(order?.product));
     formData.append("supplier", JSON.stringify(order?.supplier));
+    formData.append("refer", order?.refer);
+    formData.append("invoiceNumber", order?.invoiceNumber);
+    formData.append("itemPurchasePrice", order?.itemPurchasePrice);
+    formData.append("transport", order?.transport);
+    formData.append("hygienic", order?.hygienic);
 
     await dispatch(updateOrder({ id, formData }));
     await dispatch(getOrders());
     navigate("/orders");
   };
-
-  /* console.log(order); */
 
   return (
     <div>
@@ -76,8 +79,6 @@ const EditOrder = () => {
           saveOrder={saveOrder}
         />
       )}
-
-      <pre>{JSON.stringify(order, null, 2)}</pre>
     </div>
   );
 };

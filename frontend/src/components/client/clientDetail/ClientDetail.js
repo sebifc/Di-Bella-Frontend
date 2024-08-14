@@ -106,6 +106,9 @@ const ClientDetail = () => {
               <b>&rarr; Condición de pago acordada : </b>{" "}
               {getPaymentCondition()}
             </p>
+            <p>
+              <b>&rarr; Observaciones : </b> {client.observations}
+            </p>
             <hr />
             <code className="--color-dark">
               Created on: {client.createdAt.toLocaleString("en-US")}

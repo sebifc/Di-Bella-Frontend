@@ -2,7 +2,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import { AiOutlineEye } from "react-icons/ai";
+import { AiFillFileExcel, AiOutlineEye } from "react-icons/ai";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,7 @@ import {
 import { SpinnerImg } from "../../loader/Loader";
 import Search from "../../search/Search";
 import "./OrderList.scss";
+import { CSVLink } from "react-csv";
 
 const OrderList = ({ orders, isLoading }) => {
   const [search, setSearch] = useState("");
@@ -23,7 +24,6 @@ const OrderList = ({ orders, isLoading }) => {
   const dispatch = useDispatch();
 
   const delOrder = async (id) => {
-    console.log(id);
     await dispatch(deleteOrder(id));
     await dispatch(FILTER_ORDERS({ orders, search }));
   };
@@ -72,10 +72,49 @@ const OrderList = ({ orders, isLoading }) => {
     return supplierNames.join(", ");
   };
 
-  const getProductsNames = (products) => {
-    const productNames = products.map((product) => product.name);
-    return productNames.join(", ");
+  const getItemsSKU = (skus) => {
+    const skuNames = skus.map((sku) => sku.sku);
+    return skuNames.join(", ");
   };
+
+  const getTransport = (transport) => {
+    const types = {
+      0: "A cargo nuestro",
+      1: "A cargo del proveedor",
+    };
+
+    return types[transport];
+  };
+
+  const headers = [
+    { label: "Factura de Compra Nro", key: "invoiceNumber" },
+    { label: "SKU", key: "sku" },
+    { label: "Unidad Minima", key: "minimumUnit" },
+    { label: "Marca", key: "brand" },
+    { label: "EAN13", key: "ean13" },
+    { label: "Lote", key: "lot" },
+    { label: "Fecha de Vencimiento", key: "expiration" },
+    { label: "Proveedores", key: "supplier" },
+    { label: "Remito", key: "refer" },
+    { label: "Precio de compras de Ítem (sin IVA)", key: "itemPurchasePrice" },
+    { label: "Transporte", key: "transport" },
+    { label: "Condiciones higiénicas del transporte", key: "hygienic" },
+  ];
+
+  const dataToExport = orders.map((order) => ({
+    invoiceNumber: order.invoiceNumber,
+    sku: order?.sku?.length > 0 ? getItemsSKU(order.sku) : "",
+    minimumUnit: order.minimumUnit,
+    brand: order.brand,
+    ean13: order.ean13,
+    lot: order.lot,
+    expiration: moment(order.expiration).format("DD-MM-YYYY"),
+    supplier: getSuppliersNames(order.supplier),
+    refer: order.refer,
+    itemPurchasePrice: order.itemPurchasePrice,
+    transport: getTransport(order.transport),
+    hygienic: order.hygienic,
+  }));
 
   return (
     <div className="order-list">
@@ -100,6 +139,18 @@ const OrderList = ({ orders, isLoading }) => {
               Cargar compra
             </button>
           </Link>
+
+          <CSVLink
+            headers={headers}
+            data={dataToExport}
+            separator={";"}
+            filename="ordenes.csv"
+          >
+            <button type="button" className="--btn --btn-success">
+              Exportar
+              <AiFillFileExcel className="--ml" />
+            </button>
+          </CSVLink>
         </div>
 
         {isLoading && <SpinnerImg />}
@@ -116,7 +167,7 @@ const OrderList = ({ orders, isLoading }) => {
                   <th>Proveedores</th>
                   <th>Vencimiento</th>
                   <th>Lote</th>
-                  <th>Productos</th>
+                  <th>SKUs</th>
                   <th>Modificado por</th>
                   <th>Accion</th>
                 </tr>
@@ -132,7 +183,7 @@ const OrderList = ({ orders, isLoading }) => {
                     expiration,
                     batch,
                     user_name,
-                    product,
+                    sku,
                   } = order;
                   return (
                     <tr key={_id}>
@@ -141,7 +192,7 @@ const OrderList = ({ orders, isLoading }) => {
                       <td>{getSuppliersNames(supplier)}</td>
                       <td>{moment(expiration).format("DD/MM/YYYY")}</td>
                       <td>{batch}</td>
-                      <td>{getProductsNames(product)}</td>
+                      <td>{getItemsSKU(sku)}</td>
                       <td>{user_name}</td>
                       <td className="icons">
                         <span>

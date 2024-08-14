@@ -49,8 +49,6 @@ const EditSupplier = () => {
     formData.append("code", supplier?.code);
     formData.append("description", supplier?.description);
 
-    console.log(...formData);
-
     await dispatch(updateSupplier({ id, formData }));
     await dispatch(getSuppliers());
     navigate("/suppliers");

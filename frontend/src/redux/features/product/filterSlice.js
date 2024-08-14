@@ -5,6 +5,7 @@ const initialState = {
   filteredSuppliers: [],
   filteredClients: [],
   filteredOrders: [],
+  filteredItems: [],
 };
 
 const filterSlice = createSlice({
@@ -30,10 +31,16 @@ const filterSlice = createSlice({
       state.filteredSuppliers = tempSuppliers;
     },
     FILTER_CLIENTS(state, action) {
-      const { clients, search } = action.payload;
-      const tempClients = clients.filter((client) =>
+      const { clients, search, type } = action.payload;
+      let tempClients = clients.filter((client) =>
         client.name.toLowerCase().includes(search.toLowerCase())
       );
+
+      if (type) {
+        tempClients = tempClients.filter(
+          (client) => client.type === parseInt(type)
+        );
+      }
 
       state.filteredClients = tempClients;
     },
@@ -45,6 +52,13 @@ const filterSlice = createSlice({
 
       state.filteredOrders = tempOrders;
     },
+    FILTER_ITEMS(state, action) {
+      const { items, search } = action.payload;
+      const tempItems = items.filter((item) =>
+        item.sku.toString().includes(search.toLowerCase())
+      );
+      state.filteredItems = tempItems;
+    },
   },
 });
 
@@ -53,6 +67,7 @@ export const {
   FILTER_SUPPLIERS,
   FILTER_CLIENTS,
   FILTER_ORDERS,
+  FILTER_ITEMS,
 } = filterSlice.actions;
 
 export const selectFilteredPoducts = (state) => state.filter.filteredProducts;
@@ -60,5 +75,6 @@ export const selectFilteredSuppliers = (state) =>
   state.filter.filteredSuppliers;
 export const selectFilteredClients = (state) => state.filter.filteredClients;
 export const selectFilteredOrders = (state) => state.filter.filteredOrders;
+export const selectFilteredItems = (state) => state.filter.filteredItems;
 
 export default filterSlice.reducer;

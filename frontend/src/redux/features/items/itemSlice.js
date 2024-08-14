@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import clientService from "./clientService";
+import itemService from "./itemService";
 import { toast } from "react-toastify";
 
 const initialState = {
-  client: null,
-  clients: [],
+  item: null,
+  items: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -14,12 +14,12 @@ const initialState = {
   category: [],
 };
 
-// Create New Client
-export const createClient = createAsyncThunk(
-  "clients/create",
+// Create New Item
+export const createItem = createAsyncThunk(
+  "items/create",
   async (formData, thunkAPI) => {
     try {
-      return await clientService.createClient(formData);
+      return await itemService.createItem(formData);
     } catch (error) {
       const message =
         (error.response &&
@@ -33,12 +33,12 @@ export const createClient = createAsyncThunk(
   }
 );
 
-// Get all clients
-export const getClients = createAsyncThunk(
-  "clients/getAll",
+// Get all items
+export const getItems = createAsyncThunk(
+  "items/getAll",
   async (_, thunkAPI) => {
     try {
-      return await clientService.getClients();
+      return await itemService.getItems();
     } catch (error) {
       const message =
         (error.response &&
@@ -52,12 +52,12 @@ export const getClients = createAsyncThunk(
   }
 );
 
-// Delete a Client
-export const deleteClient = createAsyncThunk(
-  "clients/delete",
+// Delete a Item
+export const deleteItem = createAsyncThunk(
+  "items/delete",
   async (id, thunkAPI) => {
     try {
-      return await clientService.deleteClient(id);
+      return await itemService.deleteItem(id);
     } catch (error) {
       const message =
         (error.response &&
@@ -71,12 +71,12 @@ export const deleteClient = createAsyncThunk(
   }
 );
 
-// Get a client
-export const getClient = createAsyncThunk(
-  "clients/getClient",
+// Get a item
+export const getItem = createAsyncThunk(
+  "items/getItem",
   async (id, thunkAPI) => {
     try {
-      return await clientService.getClient(id);
+      return await itemService.getItem(id);
     } catch (error) {
       const message =
         (error.response &&
@@ -89,12 +89,12 @@ export const getClient = createAsyncThunk(
     }
   }
 );
-// Update client
-export const updateClient = createAsyncThunk(
-  "clients/updateClient",
+// Update item
+export const updateItem = createAsyncThunk(
+  "items/updateItem",
   async ({ id, formData }, thunkAPI) => {
     try {
-      return await clientService.updateClient(id, formData);
+      return await itemService.updateItem(id, formData);
     } catch (error) {
       const message =
         (error.response &&
@@ -108,82 +108,82 @@ export const updateClient = createAsyncThunk(
   }
 );
 
-const clientSlice = createSlice({
-  name: "client",
+const itemSlice = createSlice({
+  name: "item",
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(createClient.pending, (state) => {
+      .addCase(createItem.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createClient.fulfilled, (state, action) => {
+      .addCase(createItem.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.clients.push(action.payload);
-        toast.success("Client added successfully");
+        state.items.push(action.payload);
+        toast.success("Item added successfully");
       })
-      .addCase(createClient.rejected, (state, action) => {
+      .addCase(createItem.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(getClients.pending, (state) => {
+      .addCase(getItems.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getClients.fulfilled, (state, action) => {
+      .addCase(getItems.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.clients = action.payload;
+        state.items = action.payload;
       })
-      .addCase(getClients.rejected, (state, action) => {
+      .addCase(getItems.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(deleteClient.pending, (state) => {
+      .addCase(deleteItem.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteClient.fulfilled, (state, action) => {
+      .addCase(deleteItem.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        toast.success("Client deleted successfully");
+        toast.success("Item deleted successfully");
       })
-      .addCase(deleteClient.rejected, (state, action) => {
+      .addCase(deleteItem.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(getClient.pending, (state) => {
+      .addCase(getItem.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getClient.fulfilled, (state, action) => {
+      .addCase(getItem.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.client = action.payload;
+        state.item = action.payload;
       })
-      .addCase(getClient.rejected, (state, action) => {
+      .addCase(getItem.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(updateClient.pending, (state) => {
+      .addCase(updateItem.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(updateClient.fulfilled, (state, action) => {
+      .addCase(updateItem.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        toast.success("Client updated successfully");
+        toast.success("Item updated successfully");
       })
-      .addCase(updateClient.rejected, (state, action) => {
+      .addCase(updateItem.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
@@ -192,10 +192,10 @@ const clientSlice = createSlice({
   },
 });
 
-export const selectIsLoading = (state) => state.client.isLoading;
-export const selectClient = (state) => state.client.client;
-export const selectTotalStoreValue = (state) => state.client.totalStoreValue;
-export const selectOutOfStock = (state) => state.client.outOfStock;
-export const selectCategory = (state) => state.client.category;
+export const selectIsLoading = (state) => state.item.isLoading;
+export const selectItem = (state) => state.item.item;
+export const selectTotalStoreValue = (state) => state.item.totalStoreValue;
+export const selectOutOfStock = (state) => state.item.outOfStock;
+export const selectCategory = (state) => state.item.category;
 
-export default clientSlice.reducer;
+export default itemSlice.reducer;

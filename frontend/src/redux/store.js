@@ -5,6 +5,7 @@ import filterReducer from "../redux/features/product/filterSlice";
 import supplierReducer from "./features/supplier/supplierSlice";
 import clientReducer from "./features/client/clientSlice";
 import orderReducer from "./features/order/orderSlice";
+import itemReducer from "./features/items/itemSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     supplier: supplierReducer,
     client: clientReducer,
     order: orderReducer,
+    item: itemReducer,
   },
 });

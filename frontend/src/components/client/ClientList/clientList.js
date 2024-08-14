@@ -1,28 +1,50 @@
-import React, { useEffect, useState } from "react";
-import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import { AiOutlineEye } from "react-icons/ai";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import ReactPaginate from "react-paginate";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import "./clientList.scss";
+
+import { AiFillFileExcel, AiOutlineEye } from "react-icons/ai";
 import {
   FILTER_CLIENTS,
   selectFilteredClients,
 } from "../../../redux/features/product/filterSlice";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import {
   deleteClient,
   getClients,
 } from "../../../redux/features/client/clientSlice";
-import { SpinnerImg } from "../../loader/Loader";
+import { useDispatch, useSelector } from "react-redux";
+
+import { CSVLink } from "react-csv";
+import { Link } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 import Search from "../../search/Search";
-import "./clientList.scss";
+import Select from "../../select/Select";
+import { SpinnerImg } from "../../loader/Loader";
+import { confirmAlert } from "react-confirm-alert";
 
 const ClientList = ({ clients, isLoading }) => {
   const [search, setSearch] = useState("");
+  const [type, setType] = useState("");
   const filteredClients = useSelector(selectFilteredClients);
 
   const dispatch = useDispatch();
+
+  const headers = [
+    { label: "ID", key: "id" },
+    { label: "Nombre", key: "name" },
+    { label: "CUIT", key: "cuit" },
+    { label: "Razon Social", key: "businessName" },
+    { label: "Email 1", key: "email" },
+    { label: "Email 2", key: "email2" },
+    { label: "Email 3", key: "email3" },
+    { label: "Contacto", key: "contact" },
+    { label: "Telefono", key: "phone" },
+    { label: "Dirección", key: "location" },
+    { label: "Tipo", key: "type" },
+    { label: "Origen de Contacto", key: "originContact" },
+    { label: "Condición de pago acordada", key: "paymentCondition" },
+    { label: "Observaciones", key: "observations" },
+  ];
 
   const shortenText = (text, n) => {
     if (text.length > n) {
@@ -43,8 +65,31 @@ const ClientList = ({ clients, isLoading }) => {
     return types[type];
   };
 
+  const getOriginContact = (origin) => {
+    const origins = {
+      0: "Fernando Pazzano",
+      1: "Lucila Di Bella",
+      2: "Vendedor externo",
+      3: "Redes sociales",
+      4: "Mercado Libre",
+    };
+
+    return origins[origin];
+  };
+
+  const getPaymentCondition = (condition) => {
+    const conditions = {
+      0: "Efectivo contra entrega",
+      1: "Transferencia contranetrega",
+      2: "Transferencia a 30 dias",
+      3: "Cheque a 30 dias",
+      4: "Cheque a 60 dias",
+    };
+
+    return conditions[condition];
+  };
+
   const delClient = async (id) => {
-    console.log(id);
     await dispatch(deleteClient(id));
     await dispatch(getClients());
   };
@@ -86,8 +131,25 @@ const ClientList = ({ clients, isLoading }) => {
   //   End Pagination
 
   useEffect(() => {
-    dispatch(FILTER_CLIENTS({ clients, search }));
-  }, [clients, search, dispatch]);
+    dispatch(FILTER_CLIENTS({ clients, search, type }));
+  }, [clients, search, dispatch, type]);
+
+  const dataToExport = clients.map((client) => ({
+    id: client.clientId,
+    name: client.name,
+    cuit: client.cuit,
+    businessName: client.businessName,
+    email: client.email,
+    email2: client.email2,
+    email3: client.email3,
+    contact: client.contact,
+    phone: client.phone,
+    location: client.location,
+    type: getType(client.type),
+    originContact: getOriginContact(client.originContact),
+    paymentCondition: getPaymentCondition(client.paymentCondition),
+    observations: client.observations,
+  }));
 
   return (
     <div className="client-list">
@@ -97,13 +159,22 @@ const ClientList = ({ clients, isLoading }) => {
           <span>
             <h3>Clientes</h3>
           </span>
-          <span>
+          <div className="--flex-between --gap-10">
+            <Select
+              value={type}
+              options={[
+                { value: "", label: "Todos" },
+                { value: "0", label: "Mayorista" },
+                { value: "1", label: "Minorista" },
+              ]}
+              onChange={(e) => setType(e.target.value)}
+            />
             <Search
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={"Buscar cliente"}
             />
-          </span>
+          </div>
         </div>
 
         <div className="--flex-end">
@@ -112,6 +183,17 @@ const ClientList = ({ clients, isLoading }) => {
               Nuevo cliente
             </button>
           </Link>
+          <CSVLink
+            headers={headers}
+            data={dataToExport}
+            separator={";"}
+            filename="clientes.csv"
+          >
+            <button type="button" className="--btn --btn-success">
+              Exportar
+              <AiFillFileExcel className="--ml" />
+            </button>
+          </CSVLink>
         </div>
 
         {isLoading && <SpinnerImg />}
@@ -123,7 +205,7 @@ const ClientList = ({ clients, isLoading }) => {
             <table>
               <thead>
                 <tr>
-                  <th>s/n</th>
+                  <th>Id</th>
                   <th>Nombre Cliente</th>
                   <th>CUIT</th>
                   <th>Telefono</th>
@@ -136,11 +218,19 @@ const ClientList = ({ clients, isLoading }) => {
 
               <tbody>
                 {currentItems.map((client, index) => {
-                  const { _id, name, cuit, phone, email, type, contact } =
-                    client;
+                  const {
+                    _id,
+                    name,
+                    cuit,
+                    phone,
+                    email,
+                    type,
+                    contact,
+                    clientId,
+                  } = client;
                   return (
                     <tr key={_id}>
-                      <td>{index + 1}</td>
+                      <td>{clientId}</td>
                       <td>{shortenText(name, 16)}</td>
                       <td>{cuit}</td>
                       <td>{phone}</td>
