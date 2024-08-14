@@ -9,13 +9,18 @@ import {
 } from "../../redux/features/order/orderSlice";
 
 const initialState = {
-  date: "",
+  sku: null,
+  minimumUnit: "",
   brand: "",
+  ean13: null,
   batch: "",
   expiration: "",
-  invoiceNumber: "",
-  product: null,
   supplier: null,
+  refer: "",
+  invoiceNumber: "",
+  itemPurchasePrice: null,
+  transport: 0,
+  hygienic: "",
 };
 
 const AddOrder = () => {
@@ -38,15 +43,18 @@ const AddOrder = () => {
     e.preventDefault();
     const formData = new FormData();
 
-    formData.append("date", order?.date);
+    formData.append("sku", JSON.stringify(order?.sku));
+    formData.append("minimumUnit", order?.minimumUnit);
     formData.append("brand", order?.brand);
+    formData.append("ean13", order?.ean13);
     formData.append("batch", order?.batch);
     formData.append("expiration", order?.expiration);
-    formData.append("invoiceNumber", order?.invoiceNumber);
-    formData.append("product", JSON.stringify(order?.product));
     formData.append("supplier", JSON.stringify(order?.supplier));
-
-    console.log(...formData);
+    formData.append("refer", order?.refer);
+    formData.append("invoiceNumber", order?.invoiceNumber);
+    formData.append("itemPurchasePrice", order?.itemPurchasePrice);
+    formData.append("transport", order?.transport);
+    formData.append("hygienic", order?.hygienic);
 
     await dispatch(createOrder(formData));
 
@@ -56,7 +64,7 @@ const AddOrder = () => {
   return (
     <div>
       {isLoading && <Loader />}
-      <h3 className="--mt">Agregar Nuevo Ordere</h3>
+      <h3 className="--mt">Agregar Nuevo Pedido</h3>
       <OrderForm
         order={order}
         handleInputChange={handleInputChange}

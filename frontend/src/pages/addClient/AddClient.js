@@ -22,6 +22,7 @@ const initialState = {
   type: 0,
   originContact: 0,
   paymentCondition: 0,
+  observations: "",
 };
 
 const AddClient = () => {
@@ -52,8 +53,7 @@ const AddClient = () => {
     formData.append("type", client?.type);
     formData.append("originContact", client?.originContact);
     formData.append("paymentCondition", client?.paymentCondition);
-
-    console.log(...formData);
+    formData.append("observations", client?.observations);
 
     await dispatch(createClient(formData));
 

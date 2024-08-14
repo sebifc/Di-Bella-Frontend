@@ -6,57 +6,35 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { deleteItem } from "../../../redux/features/items/itemSlice";
 import {
-  FILTER_SUPPLIERS,
-  selectFilteredSuppliers,
+  FILTER_ITEMS,
+  selectFilteredItems,
 } from "../../../redux/features/product/filterSlice";
-import {
-  deleteSupplier,
-  getSuppliers,
-} from "../../../redux/features/supplier/supplierSlice";
 import { SpinnerImg } from "../../loader/Loader";
 import Search from "../../search/Search";
-import "./supplierList.scss";
+import "./ItemList.scss";
 import { CSVLink } from "react-csv";
 
-const SupplierList = ({ suppliers, isLoading }) => {
+const ItemList = ({ items, isLoading }) => {
   const [search, setSearch] = useState("");
-  const filteredSuppliers = useSelector(selectFilteredSuppliers);
+  const filteredItems = useSelector(selectFilteredItems);
 
   const dispatch = useDispatch();
 
-  const shortenText = (text, n) => {
-    if (text.length > n) {
-      const shortenedText = text.substring(0, n).concat("...");
-      return shortenedText;
-    }
-    return text;
-  };
-
-  const getType = (type) => {
-    const types = {
-      0: "Fabrica",
-      1: "Importador",
-      2: "Distribuidor",
-      3: "Otros",
-    };
-
-    return types[type];
-  };
-
-  const delSupplier = async (id) => {
-    await dispatch(deleteSupplier(id));
-    await dispatch(getSuppliers());
+  const delItem = async (id) => {
+    await dispatch(deleteItem(id));
+    await dispatch(FILTER_ITEMS({ items, search }));
   };
 
   const confirmDelete = (id) => {
     confirmAlert({
-      title: "Delete Supplier",
-      message: "Are you sure you want to delete this supplier.",
+      title: "Delete Item",
+      message: "Are you sure you want to delete this item.",
       buttons: [
         {
           label: "Delete",
-          onClick: () => delSupplier(id),
+          onClick: () => delItem(id),
         },
         {
           label: "Cancel",
@@ -75,79 +53,61 @@ const SupplierList = ({ suppliers, isLoading }) => {
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
 
-    setCurrentItems(filteredSuppliers.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(filteredSuppliers.length / itemsPerPage));
-  }, [itemOffset, itemsPerPage, filteredSuppliers]);
+    setCurrentItems(filteredItems.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(filteredItems.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, filteredItems]);
 
   const handlePageClick = (event) => {
-    const newOffset =
-      (event.selected * itemsPerPage) % filteredSuppliers.length;
+    const newOffset = (event.selected * itemsPerPage) % filteredItems.length;
     setItemOffset(newOffset);
   };
-  //   End Pagination
 
   useEffect(() => {
-    dispatch(FILTER_SUPPLIERS({ suppliers, search }));
-  }, [suppliers, search, dispatch]);
+    dispatch(FILTER_ITEMS({ items, search }));
+  }, [items, search, dispatch]);
 
   const headers = [
     { label: "ID", key: "id" },
-    { label: "Nombre", key: "name" },
-    { label: "CUIT", key: "cuit" },
-    { label: "Tipo", key: "type" },
-    { label: "Email", key: "email" },
-    { label: "Teléfono", key: "phone" },
-    { label: "Dirección", key: "address" },
-    { label: "Contacto", key: "contact" },
-    { label: "Forma de Pago", key: "paymentMethod" },
-    { label: "Calificado", key: "qualified" },
-    { label: "Código", key: "code" },
-    { label: "Descripción", key: "description" },
+    { label: "SKU", key: "sku" },
+    { label: "Categoria", key: "category" },
+    { label: "Unidad minima", key: "minimumUnit" },
   ];
 
-  const dataToExport = suppliers.map((supp) => ({
-    id: supp.supplierId,
-    name: supp.name,
-    cuit: supp.cuit,
-    type: getType(supp.type),
-    email: supp.email,
-    phone: supp.phone,
-    address: supp.address,
-    contact: supp.contact,
-    paymentMethod: supp.paymentMethod,
-    qualified: supp.qualified ? "Si" : "No",
-    code: supp.code,
-    description: supp.description,
+  const dataToExport = items.map((item) => ({
+    id: item.itemId,
+    sku: item.sku,
+    category: item.category,
+    minimumUnit: item.minimumUnit,
   }));
 
   return (
-    <div className="supplier-list">
+    <div className="item-list">
       <hr />
       <div className="table">
         <div className="--flex-between --flex-dir-column">
           <span>
-            <h3>Proveedores</h3>
+            <h3>Items</h3>
           </span>
           <span>
             <Search
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={"Buscar proveedor"}
+              placeholder={"Buscar item"}
             />
           </span>
         </div>
 
         <div className="--flex-end">
-          <Link to={`/add-supplier`}>
+          <Link to={`/add-item`}>
             <button type="button" className="--btn --btn-primary">
-              Nuevo proveedor
+              Cargar item
             </button>
           </Link>
           <CSVLink
             headers={headers}
             data={dataToExport}
             separator={";"}
-            filename="proveedores.csv"
+            filename="items.csv"
           >
             <button type="button" className="--btn --btn-success">
               Exportar
@@ -159,55 +119,37 @@ const SupplierList = ({ suppliers, isLoading }) => {
         {isLoading && <SpinnerImg />}
 
         <div className="table">
-          {!isLoading && suppliers.length === 0 ? (
-            <p>-- No supplier found, please add a supplier...</p>
+          {!isLoading && items.length === 0 ? (
+            <p>-- No item found, please add a item...</p>
           ) : (
             <table>
               <thead>
                 <tr>
-                  <th>Id</th>
-                  <th>Nombre empresa</th>
-                  <th>CUIT</th>
-                  <th>Telefono</th>
-                  <th>Email</th>
-                  <th>Tipo de Proveedor</th>
-                  <th>Persona de contacto</th>
-                  <th>Proveedor Calificado</th>
+                  <th>Id Item</th>
+                  <th>SKU</th>
+                  <th>Categoria</th>
+                  <th>Unidad minima</th>
                   <th>Accion</th>
                 </tr>
               </thead>
 
               <tbody>
-                {currentItems.map((supplier, index) => {
-                  const {
-                    _id,
-                    name,
-                    cuit,
-                    phone,
-                    email,
-                    type,
-                    contact,
-                    qualified,
-                    supplierId,
-                  } = supplier;
+                {currentItems.map((item, index) => {
+                  const { _id, itemId, category, sku, minimumUnit } = item;
                   return (
                     <tr key={_id}>
-                      <td>{supplierId}</td>
-                      <td>{shortenText(name, 16)}</td>
-                      <td>{cuit}</td>
-                      <td>{phone}</td>
-                      <td>{email}</td>
-                      <td>{getType(type)}</td>
-                      <td>{contact}</td>
-                      <td>{qualified ? "Si" : "No"}</td>
+                      <td>{itemId}</td>
+                      <td>{sku}</td>
+                      <td>{category}</td>
+                      <td>{minimumUnit}</td>
                       <td className="icons">
                         <span>
-                          <Link to={`/supplier-detail/${_id}`}>
+                          <Link to={`/item-detail/${_id}`}>
                             <AiOutlineEye size={25} color={"purple"} />
                           </Link>
                         </span>
                         <span>
-                          <Link to={`/edit-supplier/${_id}`}>
+                          <Link to={`/edit-item/${_id}`}>
                             <FaEdit size={20} color={"green"} />
                           </Link>
                         </span>
@@ -245,4 +187,4 @@ const SupplierList = ({ suppliers, isLoading }) => {
   );
 };
 
-export default SupplierList;
+export default ItemList;

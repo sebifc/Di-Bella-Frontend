@@ -35,9 +35,18 @@ const OrderDetail = () => {
     return supplierNames.join(", ");
   };
 
-  const getProductsNames = (products) => {
-    const productNames = products.map((product) => product.name);
-    return productNames.join(", ");
+  const getItemsSKU = (skus) => {
+    const skuNames = skus.map((sku) => sku.sku);
+    return skuNames.join(", ");
+  };
+
+  const getTransport = () => {
+    const types = {
+      0: "A cargo nuestro",
+      1: "A cargo del proveedor",
+    };
+
+    return types[order.transport];
   };
 
   return (
@@ -52,23 +61,40 @@ const OrderDetail = () => {
               {order.invoiceNumber}
             </h4>
             <p>
+              <b>&rarr; SKUs : </b> {getItemsSKU(order.sku)}
+            </p>
+            <p>
+              <b>&rarr; Unidad minima : </b> {order.minimumUnit}
+            </p>
+            <p>
               <b>&rarr; Marca : </b> {order.brand}
             </p>
             <p>
-              <b>&rarr; Proveedores : </b> {getSuppliersNames(order.supplier)}
+              <b>&rarr; EAN13 : </b> {order.ean13}
+            </p>
+            <p>
+              <b>&rarr; Lote : </b> {order.batch}
             </p>
             <p>
               <b>&rarr; Vencimiento : </b>{" "}
               {moment(order.expiration).format("DD/MM/YYYY")}
             </p>
             <p>
-              <b>&rarr; Lote : </b> {order.batch}
+              <b>&rarr; Proveedores : </b> {getSuppliersNames(order.supplier)}
             </p>
             <p>
-              <b>&rarr; Productos : </b> {getProductsNames(order.product)}
+              <b>&rarr; Remito : </b> {order.refer}
             </p>
             <p>
-              <b>&rarr; Fecha de Compra : </b> {order.date}
+              <b>&rarr; Precio de compras del ítem (sin IVA) : </b> $
+              {order.itemPurchasePrice}
+            </p>
+            <p>
+              <b>&rarr; Transporte : </b> {getTransport()}
+            </p>
+            <p>
+              <b>&rarr; Condiciones higiénicas del transporte : </b>{" "}
+              {order.hygienic}
             </p>
             <hr />
             <code className="--color-dark">

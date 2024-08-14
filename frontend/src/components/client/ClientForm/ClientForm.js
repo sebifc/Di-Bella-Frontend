@@ -162,6 +162,14 @@ const ClientForm = ({ client, handleInputChange, saveClient }) => {
             ))}
           </select>
 
+          <label>Observaciones del cliente</label>
+          <textarea
+            placeholder="Observaciones del cliente"
+            name="observations"
+            value={client?.observations}
+            onChange={handleInputChange}
+          />
+
           <div className="--my">
             <button type="submit" className="--btn --btn-primary">
               Save Client

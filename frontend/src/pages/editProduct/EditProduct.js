@@ -62,10 +62,6 @@ const EditProduct = () => {
     if (productImage) {
       formData.append("image", productImage);
     }
-    
-
-    console.log(...formData);
-    
 
     await dispatch(updateProduct({ id, formData }));
     await dispatch(getProducts());

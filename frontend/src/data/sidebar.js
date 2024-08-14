@@ -6,6 +6,7 @@ import {
   FaTh,
   FaTruckMoving,
   FaUsers,
+  FaList,
 } from "react-icons/fa";
 
 const menu = [
@@ -33,6 +34,11 @@ const menu = [
     title: "Pedidos",
     icon: <FaReceipt />,
     path: "/orders",
+  },
+  {
+    title: "Items",
+    icon: <FaList />,
+    path: "/items",
   },
   {
     title: "Cuenta",

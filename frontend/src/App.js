@@ -32,6 +32,10 @@ import Orders from "./pages/orders/Orders";
 import OrderDetail from "./components/order/orderDetail/OrderDetail";
 import EditOrder from "./pages/editOrder/EditOrder";
 import AddOrder from "./pages/addOrder/AddOrder";
+import Items from "./pages/items/Items";
+import ItemDetail from "./components/item/itemDetail/ItemDetail";
+import EditItem from "./pages/editItem/EditItem";
+import AddItem from "./pages/addItem/AddItem";
 
 axios.defaults.withCredentials = true;
 
@@ -242,6 +246,46 @@ function App() {
             <Sidebar>
               <Layout>
                 <AddOrder />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/items"
+          element={
+            <Sidebar>
+              <Layout>
+                <Items />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/item-detail/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <ItemDetail />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/edit-item/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <EditItem />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/add-item"
+          element={
+            <Sidebar>
+              <Layout>
+                <AddItem />
               </Layout>
             </Sidebar>
           }

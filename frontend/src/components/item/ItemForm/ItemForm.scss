@@ -1,4 +1,4 @@
-.add-order {
+.add-item {
   margin-bottom: 5rem;
   .card {
     width: 100%;
@@ -19,7 +19,6 @@
     input[type="email"],
     input[type="date"],
     select,
-    textarea,
     input[type="password"] {
       display: block;
       font-size: 1.6rem;

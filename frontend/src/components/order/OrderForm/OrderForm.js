@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "react-quill/dist/quill.snow.css";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsLoggedIn } from "../../../redux/features/auth/authSlice";
-import { getProducts } from "../../../redux/features/product/productSlice";
+import { getItems } from "../../../redux/features/items/itemSlice";
 import { getSuppliers } from "../../../redux/features/supplier/supplierSlice";
 import Card from "../../card/Card";
 import Loader from "../../loader/Loader";
@@ -16,14 +16,18 @@ const OrderForm = ({
   saveOrder,
   handeSelectChange,
 }) => {
+  const types = {
+    0: "A cargo nuestro",
+    1: "A cargo del proveedor",
+  };
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const {
-    products,
-    isLoading: { isLoadingProduct },
-    isError: { isErrorProduct },
-    message: { messageProduct },
-  } = useSelector((state) => state.product);
+    items,
+    isLoading: { isLoadingItem },
+    isError: { isErrorItem },
+    message: { messageItem },
+  } = useSelector((state) => state.item);
 
   const {
     suppliers,
@@ -34,17 +38,17 @@ const OrderForm = ({
 
   useEffect(() => {
     if (isLoggedIn === true) {
-      dispatch(getProducts());
+      dispatch(getItems());
       dispatch(getSuppliers());
     }
 
-    if (isErrorProduct) {
-      console.log(messageProduct);
+    if (isErrorItem) {
+      console.log(messageItem);
     }
   }, [
     isLoggedIn,
-    isErrorProduct,
-    messageProduct,
+    isErrorItem,
+    messageItem,
     dispatch,
     isErrorSupplier,
     messageSupplier,
@@ -52,13 +56,18 @@ const OrderForm = ({
 
   const validateButton = () => {
     if (
-      !order?.date ||
+      order?.sku?.length === 0 ||
+      !order?.minimumUnit ||
       !order?.brand ||
+      !order?.ean13 ||
       !order?.batch ||
       !order?.expiration ||
+      order?.supplier?.length === 0 ||
+      !order?.refer ||
       !order?.invoiceNumber ||
-      order?.product?.length === 0 ||
-      order?.supplier?.length === 0
+      !order?.itemPurchasePrice ||
+      (!order?.transport == null && !order?.transport === undefined) ||
+      !order?.hygienic
     ) {
       return true;
     } else {
@@ -77,28 +86,42 @@ const OrderForm = ({
       : null;
   };
 
-  const getDefaultValueProduct = () => {
-    return order?.product?.length > 0
-      ? products
-          .filter((product) => order?.product?.includes(product._id))
-          .map((product) => ({
-            value: product._id,
-            label: product.name,
+  const getDefaultValueSku = () => {
+    return order?.sku?.length > 0
+      ? items
+          .filter((sku) => order?.sku?.includes(sku._id))
+          .map((sku) => ({
+            value: sku._id,
+            label: sku.sku,
           }))
       : null;
   };
 
   return (
     <div className="add-order">
-      {isLoadingProduct && <Loader />}
+      {(isLoadingItem || isLoadingSupplier) && <Loader />}
       <Card cardClass={"card"}>
         <form onSubmit={saveOrder}>
-          <label>Fecha de la compra:</label>
+          <label>SKUs</label>
+          <Select
+            value={getDefaultValueSku()}
+            isMulti
+            name="sku"
+            options={items.map((sku) => ({
+              value: sku._id,
+              label: sku.sku,
+            }))}
+            onChange={(value) => handeSelectChange(value, "sku")}
+            className="basic-multi-select"
+            classNamePrefix="select"
+          />
+
+          <label>Unidad minima:</label>
           <input
-            type="date"
-            placeholder="Fecha de la compra"
-            name="date"
-            value={order?.date ? moment(order?.date).format("YYYY-MM-DD") : ""}
+            type="text"
+            placeholder="Unidad minima"
+            name="minimumUnit"
+            value={order?.minimumUnit}
             onChange={handleInputChange}
           />
 
@@ -108,6 +131,16 @@ const OrderForm = ({
             placeholder="Marca"
             name="brand"
             value={order?.brand}
+            onChange={handleInputChange}
+          />
+
+          <label>EAN13:</label>
+          <input
+            type="text"
+            maxLength={13}
+            placeholder="EAN13"
+            name="ean13"
+            value={order?.ean13}
             onChange={handleInputChange}
           />
 
@@ -133,44 +166,6 @@ const OrderForm = ({
             onChange={handleInputChange}
           />
 
-          <label>Numero de Factura:</label>
-          <input
-            type="text"
-            placeholder="Numero de Factura"
-            name="invoiceNumber"
-            value={order?.invoiceNumber}
-            onChange={handleInputChange}
-          />
-
-          <label>Producto</label>
-          <Select
-            value={getDefaultValueProduct()}
-            isMulti
-            name="product"
-            options={products.map((product) => ({
-              value: product._id,
-              label: product.name,
-            }))}
-            onChange={(value) => handeSelectChange(value, "product")}
-            className="basic-multi-select"
-            classNamePrefix="select"
-          />
-          {/* <select
-            name="product"
-            value={order?.product?._id}
-            onChange={handleInputChange}
-            placeholder="Producto"
-          >
-            <option value="">
-              {products?.length === 0 ? "No hay productos" : "Seleccionar"}
-            </option>
-            {products?.map((product) => (
-              <option key={product._id} value={product._id}>
-                {product.name}
-              </option>
-            ))}
-          </select> */}
-
           <label>Proveedor</label>
           <Select
             value={getDefaultValueSupplier()}
@@ -184,21 +179,56 @@ const OrderForm = ({
             className="basic-multi-select"
             classNamePrefix="select"
           />
-          {/* <select
-            name="supplier"
-            value={order?.supplier?._id}
+
+          <label>Remito:</label>
+          <input
+            type="text"
+            placeholder="Remito"
+            name="refer"
+            value={order?.refer}
             onChange={handleInputChange}
-            placeholder="Proveedor"
+          />
+
+          <label>Numero de Factura:</label>
+          <input
+            type="text"
+            placeholder="Numero de Factura"
+            name="invoiceNumber"
+            value={order?.invoiceNumber}
+            onChange={handleInputChange}
+          />
+
+          <label>Precio de compras del ítem (sin IVA):</label>
+          <input
+            type="number"
+            placeholder="Precio"
+            name="itemPurchasePrice"
+            value={order?.itemPurchasePrice}
+            onChange={handleInputChange}
+          />
+
+          <label>Transporte:</label>
+          <select
+            name="transport"
+            value={order?.transport}
+            onChange={handleInputChange}
+            placeholder="Transporte"
           >
-            <option value="">
-              {suppliers?.length === 0 ? "No hay proveedores" : "Seleccionar"}
-            </option>
-            {suppliers?.map((supp) => (
-              <option key={supp._id} value={supp._id}>
-                {supp.name}
+            {Object.keys(types).map((key) => (
+              <option key={key} value={key}>
+                {types[key]}
               </option>
             ))}
-          </select> */}
+          </select>
+
+          <label>Condiciones higiénicas del transporte:</label>
+          <textarea
+            type="text"
+            placeholder="Condiciones..."
+            name="hygienic"
+            value={order?.hygienic}
+            onChange={handleInputChange}
+          />
 
           <div className="--my">
             <button

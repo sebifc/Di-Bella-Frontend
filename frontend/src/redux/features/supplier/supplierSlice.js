@@ -120,7 +120,6 @@ const supplierSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        console.log(action.payload);
         state.suppliers.push(action.payload);
         toast.success("Supplier added successfully");
       })
@@ -137,7 +136,6 @@ const supplierSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        console.log(action.payload);
         state.suppliers = action.payload;
       })
       .addCase(getSuppliers.rejected, (state, action) => {

@@ -49,8 +49,6 @@ const AddSupplier = () => {
     formData.append("code", supplier?.code);
     formData.append("description", supplier?.description);
 
-    console.log(...formData);
-
     await dispatch(createSupplier(formData));
 
     navigate("/suppliers");

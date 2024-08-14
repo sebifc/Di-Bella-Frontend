@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { SpinnerImg } from "../../loader/Loader";
 import "./productList.scss";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { AiOutlineEye } from "react-icons/ai";
+import { AiFillFileExcel, AiOutlineEye } from "react-icons/ai";
 import Search from "../../search/Search";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,6 +18,7 @@ import {
 } from "../../../redux/features/product/productSlice";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { CSVLink } from "react-csv";
 
 const ProductList = ({ products, isLoading }) => {
   const [search, setSearch] = useState("");
@@ -34,7 +35,6 @@ const ProductList = ({ products, isLoading }) => {
   };
 
   const delProduct = async (id) => {
-    console.log(id);
     await dispatch(deleteProduct(id));
     await dispatch(getProducts());
   };
@@ -79,6 +79,24 @@ const ProductList = ({ products, isLoading }) => {
     dispatch(FILTER_PRODUCTS({ products, search }));
   }, [products, search, dispatch]);
 
+  const headers = [
+    { label: "ID", key: "id" },
+    { label: "Nombre", key: "name" },
+    { label: "SKU", key: "sku" },
+    { label: "Stock", key: "quantity" },
+    { label: "Categoría", key: "category" },
+    { label: "Precio", key: "price" },
+  ];
+
+  const dataToExport = products.map((prod) => ({
+    id: prod.productId,
+    name: prod.name,
+    sku: prod.sku,
+    quantity: prod.quantity,
+    category: prod.category,
+    price: `$${prod.price}`,
+  }));
+
   return (
     <div className="product-list">
       <hr />
@@ -87,13 +105,24 @@ const ProductList = ({ products, isLoading }) => {
           <span>
             <h3>Inventario de Items</h3>
           </span>
-          <span>
+          <div className="--flex --align-center">
+            <CSVLink
+              headers={headers}
+              data={dataToExport}
+              separator={";"}
+              filename="productos.csv"
+            >
+              <button type="button" className="--btn --btn-success">
+                Exportar
+                <AiFillFileExcel className="--ml" />
+              </button>
+            </CSVLink>
             <Search
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={"Buscar productos"}
             />
-          </span>
+          </div>
         </div>
 
         {isLoading && <SpinnerImg />}
@@ -105,7 +134,7 @@ const ProductList = ({ products, isLoading }) => {
             <table>
               <thead>
                 <tr>
-                  <th>s/n</th>
+                  <th>Id</th>
                   <th>Nombre</th>
                   <th>Categoria</th>
                   <th>Precio</th>
@@ -120,12 +149,24 @@ const ProductList = ({ products, isLoading }) => {
 
               <tbody>
                 {currentItems.map((product, index) => {
-                  const { _id, name, category, price, quantity, user_name, updatedAt, createdAt } = product;
-                  const formattedUpdatedAt = moment(updatedAt).format('YYYY-MM-DD HH:mm');
-                  const formattedCreatedAt = moment(createdAt).format('YYYY-MM-DD HH:mm');
+                  const {
+                    _id,
+                    name,
+                    category,
+                    price,
+                    quantity,
+                    user_name,
+                    updatedAt,
+                    createdAt,
+                    productId,
+                  } = product;
+                  const formattedUpdatedAt =
+                    moment(updatedAt).format("YYYY-MM-DD HH:mm");
+                  const formattedCreatedAt =
+                    moment(createdAt).format("YYYY-MM-DD HH:mm");
                   return (
                     <tr key={_id}>
-                      <td>{index + 1}</td>
+                      <td>{productId}</td>
                       <td>{shortenText(name, 16)}</td>
                       <td>{category}</td>
                       <td>
