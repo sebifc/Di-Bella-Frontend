@@ -127,7 +127,6 @@ const ItemList = ({ items, isLoading }) => {
             <table>
               <thead>
                 <tr>
-                  <th>Id Item</th>
                   <th>SKU</th>
                   <th>Categoria</th>
                   <th>Descripción</th>
@@ -138,10 +137,9 @@ const ItemList = ({ items, isLoading }) => {
 
               <tbody>
                 {currentItems.map((item, index) => {
-                  const { _id, itemId, category, sku, description, presentation } = item;
+                  const { _id, category, sku, description, presentation } = item;
                   return (
                     <tr key={_id}>
-                      <td>{itemId}</td>
                       <td>{sku}</td>
                       <td>{category}</td>
                       <td>{description}</td>
