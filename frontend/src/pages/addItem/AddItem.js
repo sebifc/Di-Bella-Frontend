@@ -11,7 +11,8 @@ import {
 const initialState = {
   sku: "",
   category: "",
-  minimumUnit: "",
+  description: "",
+  presentation: "",
 };
 
 const AddItem = () => {
@@ -31,7 +32,8 @@ const AddItem = () => {
     const formData = new FormData();
     formData.append("sku", item?.sku);
     formData.append("category", item?.category);
-    formData.append("minimumUnit", item?.minimumUnit);
+    formData.append("description", item?.description);
+    formData.append("presentation", item?.presentation);
 
     await dispatch(createItem(formData));
 

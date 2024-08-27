@@ -70,14 +70,16 @@ const ItemList = ({ items, isLoading }) => {
     { label: "ID", key: "id" },
     { label: "SKU", key: "sku" },
     { label: "Categoria", key: "category" },
-    { label: "Unidad minima", key: "minimumUnit" },
+    { label: "Descripción", key: "description" },
+    { label: "Unidad minima", key: "presentation" },
   ];
 
   const dataToExport = items.map((item) => ({
     id: item.itemId,
     sku: item.sku,
     category: item.category,
-    minimumUnit: item.minimumUnit,
+    description: item.description,
+    presentation: item.presentation,
   }));
 
   return (
@@ -128,20 +130,22 @@ const ItemList = ({ items, isLoading }) => {
                   <th>Id Item</th>
                   <th>SKU</th>
                   <th>Categoria</th>
-                  <th>Unidad minima</th>
+                  <th>Descripción</th>
+                  <th>Presentación</th>
                   <th>Accion</th>
                 </tr>
               </thead>
 
               <tbody>
                 {currentItems.map((item, index) => {
-                  const { _id, itemId, category, sku, minimumUnit } = item;
+                  const { _id, itemId, category, sku, description, presentation } = item;
                   return (
                     <tr key={_id}>
                       <td>{itemId}</td>
                       <td>{sku}</td>
                       <td>{category}</td>
-                      <td>{minimumUnit}</td>
+                      <td>{description}</td>
+                      <td>{presentation}</td>
                       <td className="icons">
                         <span>
                           <Link to={`/item-detail/${_id}`}>
