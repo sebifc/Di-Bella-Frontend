@@ -43,7 +43,10 @@ const ItemDetail = () => {
               <b>&rarr; Categoria : </b> {item.category}
             </p>
             <p>
-              <b>&rarr; Unidad minima : </b> {item.minimumUnit}
+              <b>&rarr; Descripción : </b> {item.description}
+            </p>
+            <p>
+              <b>&rarr; Presentación : </b> {item.presentation}
             </p>
             <hr />
             <code className="--color-dark">

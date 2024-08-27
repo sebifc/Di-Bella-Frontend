@@ -28,12 +28,21 @@ const ItemForm = ({ item, handleInputChange, saveItem }) => {
             onChange={handleInputChange}
           />
 
-          <label>Unidad minima:</label>
+          <label>Descripción:</label>
           <input
             type="text"
-            placeholder="Unidad minima"
-            name="minimumUnit"
-            value={item?.minimumUnit}
+            placeholder="Descripción"
+            name="description"
+            value={item?.description}
+            onChange={handleInputChange}
+          />
+
+          <label>Presentación:</label>
+          <input
+            type="text"
+            placeholder="Presentación"
+            name="presentation"
+            value={item?.presentation}
             onChange={handleInputChange}
           />
 
