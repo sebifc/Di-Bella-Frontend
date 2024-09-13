@@ -68,6 +68,9 @@ const OrderList = ({ orders, isLoading }) => {
   }, [orders, search, dispatch]);
 
   const getSuppliersNames = (suppliers) => {
+    if (suppliers === null || suppliers.length === 0) {
+      return "Sin proveedor";
+    }
     const supplierNames = suppliers.map((supplier) => supplier.name);
     return supplierNames.join(", ");
   };
@@ -89,7 +92,7 @@ const OrderList = ({ orders, isLoading }) => {
   const headers = [
     { label: "Factura de Compra Nro", key: "invoiceNumber" },
     { label: "SKU", key: "sku" },
-    { label: "Unidad Minima", key: "minimumUnit" },
+    { label: "Cantidad", key: "minimumUnit" },
     { label: "Marca", key: "brand" },
     { label: "EAN13", key: "ean13" },
     { label: "Lote", key: "lot" },
@@ -108,7 +111,9 @@ const OrderList = ({ orders, isLoading }) => {
     brand: order.brand,
     ean13: order.ean13,
     lot: order.lot,
-    expiration: moment(order.expiration).format("DD-MM-YYYY"),
+    expiration: order.expiration
+      ? moment(order.expiration).format("DD/MM/YYYY")
+      : "Sin fecha de vencimiento",
     supplier: getSuppliersNames(order.supplier),
     refer: order.refer,
     itemPurchasePrice: order.itemPurchasePrice,
@@ -190,7 +195,11 @@ const OrderList = ({ orders, isLoading }) => {
                       <td>{invoiceNumber}</td>
                       <td>{brand}</td>
                       <td>{getSuppliersNames(supplier)}</td>
-                      <td>{moment(expiration).format("DD/MM/YYYY")}</td>
+                      <td>
+                        {expiration
+                          ? moment(expiration).format("DD/MM/YYYY")
+                          : "Sin fecha de vencimiento"}
+                      </td>
                       <td>{batch}</td>
                       <td>{getItemsSKU(sku)}</td>
                       <td>{user_name}</td>

@@ -47,7 +47,7 @@ const filterSlice = createSlice({
     FILTER_ORDERS(state, action) {
       const { orders, search } = action.payload;
       const tempOrders = orders.filter((order) =>
-        order.invoiceNumber.toString().includes(search.toLowerCase())
+        order.sku.find(({sku}) => sku.toString().includes(search.toLowerCase()))
       );
 
       state.filteredOrders = tempOrders;

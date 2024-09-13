@@ -31,7 +31,7 @@ const menu = [
     path: "/clients",
   },
   {
-    title: "Pedidos",
+    title: "Compras",
     icon: <FaReceipt />,
     path: "/orders",
   },
