@@ -31,6 +31,7 @@ const OrderDetail = () => {
   }, [isLoggedIn, isError, message, dispatch]);
 
   const getSuppliersNames = (suppliers) => {
+    if (!suppliers) return "Sin Proveedores";
     const supplierNames = suppliers.map((supplier) => supplier.name);
     return supplierNames.join(", ");
   };
@@ -64,7 +65,7 @@ const OrderDetail = () => {
               <b>&rarr; SKUs : </b> {getItemsSKU(order.sku)}
             </p>
             <p>
-              <b>&rarr; Unidad minima : </b> {order.minimumUnit}
+              <b>&rarr; Cantidad : </b> {order.minimumUnit}
             </p>
             <p>
               <b>&rarr; Marca : </b> {order.brand}
@@ -77,7 +78,9 @@ const OrderDetail = () => {
             </p>
             <p>
               <b>&rarr; Vencimiento : </b>{" "}
-              {moment(order.expiration).format("DD/MM/YYYY")}
+              {order.expiration
+                ? moment(order.expiration).format("DD/MM/YYYY")
+                : "Sin fecha de vencimiento"}
             </p>
             <p>
               <b>&rarr; Proveedores : </b> {getSuppliersNames(order.supplier)}

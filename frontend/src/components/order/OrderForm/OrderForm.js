@@ -57,17 +57,7 @@ const OrderForm = ({
   const validateButton = () => {
     if (
       order?.sku?.length === 0 ||
-      !order?.minimumUnit ||
-      !order?.brand ||
-      !order?.ean13 ||
-      !order?.batch ||
-      !order?.expiration ||
-      order?.supplier?.length === 0 ||
-      !order?.refer ||
-      !order?.invoiceNumber ||
-      !order?.itemPurchasePrice ||
-      (!order?.transport == null && !order?.transport === undefined) ||
-      !order?.hygienic
+      !order?.minimumUnit
     ) {
       return true;
     } else {
@@ -109,17 +99,17 @@ const OrderForm = ({
             name="sku"
             options={items.map((sku) => ({
               value: sku._id,
-              label: sku.sku,
+              label: `${sku.sku} - ${sku.category} - ${sku.presentation}`,
             }))}
             onChange={(value) => handeSelectChange(value, "sku")}
             className="basic-multi-select"
             classNamePrefix="select"
           />
 
-          <label>Unidad minima:</label>
+          <label>Cantidad:</label>
           <input
-            type="text"
-            placeholder="Unidad minima"
+            type="number"
+            placeholder="Cantidad"
             name="minimumUnit"
             value={order?.minimumUnit}
             onChange={handleInputChange}
