@@ -6,6 +6,7 @@ import supplierReducer from "./features/supplier/supplierSlice";
 import clientReducer from "./features/client/clientSlice";
 import orderReducer from "./features/order/orderSlice";
 import itemReducer from "./features/items/itemSlice";
+import budgetReducer from "./features/budgets/budgetSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     client: clientReducer,
     order: orderReducer,
     item: itemReducer,
+    budget: budgetReducer,
   },
 });

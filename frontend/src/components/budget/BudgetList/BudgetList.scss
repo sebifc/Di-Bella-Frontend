@@ -1,43 +1,15 @@
-.add-order {
-  margin-bottom: 5rem;
-  .card {
-    width: 100%;
-    max-width: 500px;
-    padding: 1rem;
-    overflow: initial;
-  }
-  form {
-    label {
-      display: block;
-      font-size: 1.4rem;
-      font-weight: 500;
-      color: var(--color-dark);
-    }
-    input[type="text"],
-    input[type="number"],
-    input[type="file"],
-    input[type="email"],
-    input[type="date"],
-    select,
-    textarea,
-    input[type="password"] {
-      display: block;
-      font-size: 1.6rem;
-      font-weight: 300;
-      padding: 1rem;
-      margin: 1rem auto;
-      width: 100%;
-      border: 1px solid #777;
-      border-radius: 3px;
-      outline: none;
-    }
-  }
-
+.budget-list {
+  color: #333;
   .table {
-    color: #333;
     padding: 5px;
     width: 100%;
     overflow-x: auto;
+
+    .search {
+      width: 100%;
+      max-width: 300px;
+    }
+
     table {
       border-collapse: collapse;
       width: 100%;
@@ -86,9 +58,4 @@
       }
     }
   }
-}
-
-.group {
-  border: 1px solid var(--dark-blue);
-  padding: 5px;
 }

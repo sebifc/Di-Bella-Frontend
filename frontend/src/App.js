@@ -36,6 +36,7 @@ import Items from "./pages/items/Items";
 import ItemDetail from "./components/item/itemDetail/ItemDetail";
 import EditItem from "./pages/editItem/EditItem";
 import AddItem from "./pages/addItem/AddItem";
+import Budgets from "./pages/budgets/Budgets";
 
 axios.defaults.withCredentials = true;
 
@@ -286,6 +287,16 @@ function App() {
             <Sidebar>
               <Layout>
                 <AddItem />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/budgets"
+          element={
+            <Sidebar>
+              <Layout>
+                <Budgets />
               </Layout>
             </Sidebar>
           }

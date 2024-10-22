@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsLoggedIn } from "../../../redux/features/auth/authSlice";
@@ -9,6 +9,7 @@ import Loader from "../../loader/Loader";
 import "./OrderForm.scss";
 import moment from "moment";
 import Select from "react-select";
+import Modal from "../../Modal/Modal";
 
 const OrderForm = ({
   order,
@@ -16,6 +17,52 @@ const OrderForm = ({
   saveOrder,
   handeSelectChange,
 }) => {
+  const [modal, setModal] = useState(false);
+  const [item, setItem] = useState({
+    sku: "",
+    minimumUnit: "",
+    brand: "",
+    ean13: "",
+    batch: "",
+    expiration: "",
+    itemPurchasePrice: "",
+  });
+  const [orderItems, setOrderItems] = useState([]);
+
+  const handleInputItemChange = (e) => {
+    setItem({
+      ...item,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSelectItemChange = (selectedOption) => {
+    setItem({
+      ...item,
+      sku: selectedOption.value,
+    });
+  };
+
+  const handleSave = () => {
+    if (!order.sku || !order.minimumUnit) {
+      alert("Por favor, completa todos los campos obligatorios.");
+      return;
+    }
+
+    setOrderItems([...orderItems, order]);
+
+    setItem({
+      sku: "",
+      minimumUnit: "",
+      brand: "",
+      ean13: "",
+      batch: "",
+      expiration: "",
+      itemPurchasePrice: "",
+    });
+    setModal(false);
+  };
+
   const types = {
     0: "A cargo nuestro",
     1: "A cargo del proveedor",
@@ -55,10 +102,7 @@ const OrderForm = ({
   ]);
 
   const validateButton = () => {
-    if (
-      order?.sku?.length === 0 ||
-      !order?.minimumUnit
-    ) {
+    if (order?.sku?.length === 0 || !order?.minimumUnit) {
       return true;
     } else {
       return false;
@@ -92,7 +136,142 @@ const OrderForm = ({
       {(isLoadingItem || isLoadingSupplier) && <Loader />}
       <Card cardClass={"card"}>
         <form onSubmit={saveOrder}>
-          <label>SKUs</label>
+          <div className="table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Cantidad</th>
+                  <th>Precio</th>
+                  <th>Marca</th>
+                  <th>Lote</th>
+                  <th>EAN13</th>
+                  <th>Expiración</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {orderItems.length > 0 &&
+                  orderItems.map((orderItem, index) => (
+                    <tr key={index}>
+                      <td>{orderItem.sku}</td>
+                      <td>{orderItem.minimumUnit}</td>
+                      <td>{orderItem.itemPurchasePrice}</td>
+                      <td>{orderItem.brand}</td>
+                      <td>{orderItem.batch}</td>
+                      <td>{orderItem.ean13}</td>
+                      <td>{orderItem.expiration}</td>
+                    </tr>
+                  ))}
+                <tr>
+                  <td colSpan={"7"}>
+                    <button
+                      type="button"
+                      className="--btn --btn-primary --width-100"
+                      onClick={() => setModal(true)}
+                    >
+                      Agregar item
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <Modal openModal={modal}>
+            <pre>{JSON.stringify(item, null, 2)}</pre>
+            <label>SKUs</label>
+            <Select
+              name="sku"
+              options={items.map((sku) => ({
+                value: sku._id,
+                label: `${sku.sku} - ${sku.category} - ${sku.presentation}`,
+              }))}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              onChange={handleSelectItemChange}
+              
+            />
+
+            <label>Cantidad:</label>
+            <input
+              type="number"
+              placeholder="Cantidad"
+              name="minimumUnit"
+              value={item.minimumUnit}
+              onChange={handleInputItemChange}
+            />
+
+            <label>Marca:</label>
+            <input
+              type="text"
+              placeholder="Marca"
+              name="brand"
+              value={item.brand}
+              onChange={handleInputItemChange}
+            />
+
+            <label>EAN13:</label>
+            <input
+              type="text"
+              maxLength={13}
+              placeholder="EAN13"
+              name="ean13"
+              value={item.ean13}
+              onChange={handleInputItemChange}
+            />
+
+            <label>Lote:</label>
+            <input
+              type="text"
+              placeholder="Lote"
+              name="batch"
+              value={item.batch}
+              onChange={handleInputItemChange}
+            />
+
+            <label>Vencimiento:</label>
+            <input
+              type="date"
+              placeholder="Vencimiento"
+              name="expiration"
+              value={
+                item.expiration
+                  ? moment(item.expiration).format("YYYY-MM-DD")
+                  : ""
+              }
+              onChange={handleInputItemChange}
+            />
+
+            <label>Precio de compras del ítem (sin IVA):</label>
+            <input
+              type="number"
+              placeholder="Precio"
+              name="itemPurchasePrice"
+              value={item.itemPurchasePrice}
+              onChange={handleInputItemChange}
+            />
+
+            <div className="--flex-center">
+              <button
+                className="--btn --btn-primary"
+                type="button"
+                onClick={handleSave}
+              >
+                Guardar
+              </button>
+
+              <button
+                className="--btn --btn-danger"
+                type="button"
+                onClick={() => setModal(false)}
+              >
+                Cerrar
+              </button>
+            </div>
+          </Modal>
+
+          {/* <label>SKUs</label>
           <Select
             value={getDefaultValueSku()}
             isMulti
@@ -154,7 +333,7 @@ const OrderForm = ({
                 : ""
             }
             onChange={handleInputChange}
-          />
+          /> */}
 
           <label>Proveedor</label>
           <Select
@@ -188,14 +367,14 @@ const OrderForm = ({
             onChange={handleInputChange}
           />
 
-          <label>Precio de compras del ítem (sin IVA):</label>
+          {/* <label>Precio de compras del ítem (sin IVA):</label>
           <input
             type="number"
             placeholder="Precio"
             name="itemPurchasePrice"
             value={order?.itemPurchasePrice}
             onChange={handleInputChange}
-          />
+          /> */}
 
           <label>Transporte:</label>
           <select
