@@ -48,9 +48,12 @@ const filterSlice = createSlice({
     FILTER_ORDERS(state, action) {
       const { orders, search } = action.payload;
       const tempOrders = orders.filter((order) =>
-        order.sku.find(({ item }) =>
-          item.sku.toString().includes(search.toLowerCase())
-        )
+        order.sku.find(({ item }) => {
+          if (typeof item === "string") {
+            return item.toLowerCase().includes(search.toLowerCase());
+          }
+          return item?.sku.toString().includes(search.toLowerCase());
+        })
       );
 
       state.filteredOrders = tempOrders;

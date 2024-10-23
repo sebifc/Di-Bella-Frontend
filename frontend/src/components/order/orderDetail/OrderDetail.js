@@ -50,6 +50,10 @@ const OrderDetail = () => {
     return types[order.transport];
   };
 
+  const getLabelItem = ({ item }) => {
+    return `${item?.sku} - ${item?.category} - ${item?.presentation}`;
+  };
+
   return (
     <div className="order-detail">
       <h3 className="--mt">Detalle de la compra</h3>
@@ -61,36 +65,46 @@ const OrderDetail = () => {
               <span className="badge">Factura de Compra Nro: </span> &nbsp;{" "}
               {order.invoiceNumber}
             </h4>
-            <p>
-              <b>&rarr; SKUs : </b> {getItemsSKU(order.sku)}
-            </p>
-            <p>
-              <b>&rarr; Cantidad : </b> {order.minimumUnit}
-            </p>
-            <p>
-              <b>&rarr; Marca : </b> {order.brand}
-            </p>
-            <p>
-              <b>&rarr; EAN13 : </b> {order.ean13}
-            </p>
-            <p>
-              <b>&rarr; Lote : </b> {order.batch}
-            </p>
-            <p>
-              <b>&rarr; Vencimiento : </b>{" "}
-              {order.expiration
-                ? moment(order.expiration).format("DD/MM/YYYY")
-                : "Sin fecha de vencimiento"}
-            </p>
+
+            <div className="table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Marca</th>
+                    <th>Lote</th>
+                    <th>EAN13</th>
+                    <th>Expiración</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {order.sku.length > 0 &&
+                    order.sku.map((orderItem, index) => (
+                      <tr key={index}>
+                        <td>{getLabelItem(orderItem)}</td>
+                        <td>{orderItem.minimumUnit}</td>
+                        <td>{orderItem.itemPurchasePrice}$</td>
+                        <td>{orderItem.brand}</td>
+                        <td>{orderItem.batch}</td>
+                        <td>{orderItem.ean13}</td>
+                        <td>
+                          {orderItem.expiration
+                            ? moment(orderItem.expiration).format("DD/MM/YYYY")
+                            : "Sin fecha de vencimiento"}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
             <p>
               <b>&rarr; Proveedores : </b> {getSuppliersNames(order.supplier)}
             </p>
             <p>
               <b>&rarr; Remito : </b> {order.refer}
-            </p>
-            <p>
-              <b>&rarr; Precio de compras del ítem (sin IVA) : </b> $
-              {order.itemPurchasePrice}
             </p>
             <p>
               <b>&rarr; Transporte : </b> {getTransport()}

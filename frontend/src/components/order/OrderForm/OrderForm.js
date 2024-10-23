@@ -16,10 +16,11 @@ const OrderForm = ({
   handleInputChange,
   saveOrder,
   handeSelectChange,
+  handleItemsChange
 }) => {
   const [modal, setModal] = useState(false);
   const [item, setItem] = useState({
-    sku: "",
+    item: "",
     minimumUnit: "",
     brand: "",
     ean13: "",
@@ -39,20 +40,20 @@ const OrderForm = ({
   const handleSelectItemChange = (selectedOption) => {
     setItem({
       ...item,
-      sku: selectedOption.value,
+      item: selectedOption.value,
     });
   };
 
   const handleSave = () => {
-    if (!order.sku || !order.minimumUnit) {
+    if (!item.item || !item.minimumUnit) {
       alert("Por favor, completa todos los campos obligatorios.");
       return;
     }
 
-    setOrderItems([...orderItems, order]);
+    setOrderItems([...orderItems, item]);
 
     setItem({
-      sku: "",
+      item: "",
       minimumUnit: "",
       brand: "",
       ean13: "",
@@ -62,6 +63,10 @@ const OrderForm = ({
     });
     setModal(false);
   };
+
+  useEffect(() => {
+    handleItemsChange(orderItems)
+  }, [orderItems]);
 
   const types = {
     0: "A cargo nuestro",
@@ -102,11 +107,7 @@ const OrderForm = ({
   ]);
 
   const validateButton = () => {
-    if (order?.sku?.length === 0 || !order?.minimumUnit) {
-      return true;
-    } else {
-      return false;
-    }
+    return order?.sku?.length === 0;
   };
 
   const getDefaultValueSupplier = () => {
@@ -120,15 +121,10 @@ const OrderForm = ({
       : null;
   };
 
-  const getDefaultValueSku = () => {
-    return order?.sku?.length > 0
-      ? items
-          .filter((sku) => order?.sku?.includes(sku._id))
-          .map((sku) => ({
-            value: sku._id,
-            label: sku.sku,
-          }))
-      : null;
+  const getLabelItem = (orderItem) => {
+    const item = items.find((item) => item._id === orderItem.item);
+
+    return `${item?.sku} - ${item?.category} - ${item?.presentation}`;
   };
 
   return (
@@ -154,9 +150,9 @@ const OrderForm = ({
                 {orderItems.length > 0 &&
                   orderItems.map((orderItem, index) => (
                     <tr key={index}>
-                      <td>{orderItem.sku}</td>
+                      <td>{getLabelItem(orderItem)}</td>
                       <td>{orderItem.minimumUnit}</td>
-                      <td>{orderItem.itemPurchasePrice}</td>
+                      <td>{orderItem.itemPurchasePrice}$</td>
                       <td>{orderItem.brand}</td>
                       <td>{orderItem.batch}</td>
                       <td>{orderItem.ean13}</td>
@@ -190,7 +186,6 @@ const OrderForm = ({
               className="basic-multi-select"
               classNamePrefix="select"
               onChange={handleSelectItemChange}
-              
             />
 
             <label>Cantidad:</label>
@@ -213,7 +208,7 @@ const OrderForm = ({
 
             <label>EAN13:</label>
             <input
-              type="text"
+              type="number"
               maxLength={13}
               placeholder="EAN13"
               name="ean13"
@@ -408,6 +403,8 @@ const OrderForm = ({
               Guardar Compra
             </button>
           </div>
+
+          <pre>{JSON.stringify(order, null, 2)}</pre>
         </form>
       </Card>
     </div>
