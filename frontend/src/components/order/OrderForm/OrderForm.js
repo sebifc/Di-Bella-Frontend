@@ -10,15 +10,18 @@ import "./OrderForm.scss";
 import moment from "moment";
 import Select from "react-select";
 import Modal from "../../Modal/Modal";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
 const OrderForm = ({
   order,
   handleInputChange,
   saveOrder,
   handeSelectChange,
-  handleItemsChange
+  handleItemsChange,
+  isEdit = false,
 }) => {
   const [modal, setModal] = useState(false);
+  const [isEditItem, setIsEditItem] = useState(false);
   const [item, setItem] = useState({
     item: "",
     minimumUnit: "",
@@ -28,7 +31,7 @@ const OrderForm = ({
     expiration: "",
     itemPurchasePrice: "",
   });
-  const [orderItems, setOrderItems] = useState([]);
+  const [orderItems, setOrderItems] = useState(isEdit ? order?.sku : []);
 
   const handleInputItemChange = (e) => {
     setItem({
@@ -50,7 +53,13 @@ const OrderForm = ({
       return;
     }
 
-    setOrderItems([...orderItems, item]);
+    if (isEditItem) {
+      setOrderItems(
+        orderItems.map((orderItem) =>
+          orderItem._id === item._id ? item : orderItem
+        )
+      );
+    } else setOrderItems([...orderItems, item]);
 
     setItem({
       item: "",
@@ -62,10 +71,11 @@ const OrderForm = ({
       itemPurchasePrice: "",
     });
     setModal(false);
+    setIsEditItem(false);
   };
 
   useEffect(() => {
-    handleItemsChange(orderItems)
+    handleItemsChange(orderItems);
   }, [orderItems]);
 
   const types = {
@@ -123,8 +133,7 @@ const OrderForm = ({
 
   const getLabelItem = (orderItem) => {
     const item = items.find((item) => item._id === orderItem.item);
-
-    return `${item?.sku} - ${item?.category} - ${item?.presentation}`;
+    return item ? `${item.sku} - ${item.category} - ${item.presentation}` : "";
   };
 
   return (
@@ -143,6 +152,7 @@ const OrderForm = ({
                   <th>Lote</th>
                   <th>EAN13</th>
                   <th>Expiración</th>
+                  {isEdit && <th>Acciones</th>}
                 </tr>
               </thead>
 
@@ -157,10 +167,38 @@ const OrderForm = ({
                       <td>{orderItem.batch}</td>
                       <td>{orderItem.ean13}</td>
                       <td>{orderItem.expiration}</td>
+                      {isEdit && (
+                        <td>
+                          <button
+                            type="button"
+                            className="--btn --btn-danger"
+                            onClick={() =>
+                              setOrderItems(
+                                orderItems.filter(
+                                  (item) => item !== orderItems[index]
+                                )
+                              )
+                            }
+                          >
+                            <FaTrashAlt />
+                          </button>
+                          <button
+                            type="button"
+                            className="--btn --btn-primary"
+                            onClick={() => {
+                              setItem(orderItem);
+                              setIsEditItem(true);
+                              setModal(true);
+                            }}
+                          >
+                            <FaEdit />
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 <tr>
-                  <td colSpan={"7"}>
+                  <td colSpan={"8"}>
                     <button
                       type="button"
                       className="--btn --btn-primary --width-100"
@@ -177,7 +215,26 @@ const OrderForm = ({
           <Modal openModal={modal}>
             <pre>{JSON.stringify(item, null, 2)}</pre>
             <label>SKUs</label>
-            <Select
+            <select
+              name="sku"
+              value={item.item}
+              onChange={({ target: { value } }) => {
+                setItem({
+                  ...item,
+                  item: value,
+                });
+              }}
+            >
+              <option value="" disabled>
+                -- Seleccione --
+              </option>
+              {items.map((sku) => (
+                <option key={sku._id} value={sku._id}>
+                  {sku.sku} - {sku.category} - {sku.presentation}
+                </option>
+              ))}
+            </select>
+            {/* <Select
               name="sku"
               options={items.map((sku) => ({
                 value: sku._id,
@@ -186,7 +243,8 @@ const OrderForm = ({
               className="basic-multi-select"
               classNamePrefix="select"
               onChange={handleSelectItemChange}
-            />
+            /> */}
+            {item.item._id}
 
             <label>Cantidad:</label>
             <input

@@ -34,8 +34,6 @@ const AddOrder = () => {
   };
 
   const handleItemsChange = (items) => {
-    console.log(items);
-    
     setOrder({ ...order, sku: items });
   };
 
@@ -48,6 +46,7 @@ const AddOrder = () => {
     formData.append("invoiceNumber", order?.invoiceNumber);
     formData.append("transport", order?.transport);
     formData.append("hygienic", order?.hygienic);
+    formData.append("refer", order?.refer);
     
     await dispatch(createOrder(formData));
 
