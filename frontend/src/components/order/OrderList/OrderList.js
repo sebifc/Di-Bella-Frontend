@@ -167,6 +167,7 @@ const OrderList = ({ orders, isLoading }) => {
             <table>
               <thead>
                 <tr>
+                  <th>Nro</th>
                   <th>Factura de Compra Nro</th>
                   <th>Proveedores</th>
                   <th>SKUs</th>
@@ -177,10 +178,11 @@ const OrderList = ({ orders, isLoading }) => {
 
               <tbody>
                 {currentItems.map((order, index) => {
-                  const { _id, invoiceNumber, supplier, user_name, sku } =
+                  const { _id, invoiceNumber, supplier, user_name, sku, orderId } =
                     order;
                   return (
                     <tr key={_id}>
+                      <td>#{orderId}</td>
                       <td>{invoiceNumber}</td>
                       <td>{getSuppliersNames(supplier)}</td>
                       <td>{getItemsSKU(sku)}</td>
@@ -192,7 +194,7 @@ const OrderList = ({ orders, isLoading }) => {
                           </Link>
                         </span>
                         <span>
-                          <Link to={`/edit-order/${_id}`}>
+                          <Link to={`/edit-order/${_id}`} reloadDocument>
                             <FaEdit size={20} color={"green"} />
                           </Link>
                         </span>

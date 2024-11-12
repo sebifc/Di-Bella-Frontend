@@ -213,7 +213,6 @@ const OrderForm = ({
           </div>
 
           <Modal openModal={modal}>
-            <pre>{JSON.stringify(item, null, 2)}</pre>
             <label>SKUs</label>
             <select
               name="sku"
@@ -461,8 +460,6 @@ const OrderForm = ({
               Guardar Compra
             </button>
           </div>
-
-          <pre>{JSON.stringify(order, null, 2)}</pre>
         </form>
       </Card>
     </div>

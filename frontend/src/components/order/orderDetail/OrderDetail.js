@@ -36,11 +36,6 @@ const OrderDetail = () => {
     return supplierNames.join(", ");
   };
 
-  const getItemsSKU = (skus) => {
-    const skuNames = skus.map((sku) => sku.sku);
-    return skuNames.join(", ");
-  };
-
   const getTransport = () => {
     const types = {
       0: "A cargo nuestro",
