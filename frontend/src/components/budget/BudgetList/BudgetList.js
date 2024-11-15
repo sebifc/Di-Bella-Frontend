@@ -1,8 +1,9 @@
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import { AiFillFileExcel, AiOutlineEye } from "react-icons/ai";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { AiOutlineEye } from "react-icons/ai";
+import { FaTrashAlt } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -20,6 +21,21 @@ const BudgetList = ({ budgets, isLoading }) => {
   const filteredBudgets = useSelector(selectFilteredBudgets);
 
   const dispatch = useDispatch();
+
+  const ProspectStatusValues = Object.freeze({
+    0: "Borrador",
+    1: "Rechazado",
+    2: "Aprobado",
+    3: "Aprobado con Modificaciones",
+  });
+
+  const PaymentMethodsValues = Object.freeze({
+    0: "Efectivo contra entrega",
+    1: "Transferencia contraentrega",
+    2: "Transferencia a 30 dias",
+    3: "Cheque a 30 dias",
+    4: "Cheque a 60 dias",
+  });
 
   const delBudget = async (id) => {
     await dispatch(deleteBudget(id));
@@ -100,33 +116,36 @@ const BudgetList = ({ budgets, isLoading }) => {
             <table>
               <thead>
                 <tr>
-                  <th>SKU</th>
-                  <th>Categoria</th>
-                  <th>Descripción</th>
-                  <th>Presentación</th>
+                  <th>N°</th>
+                  <th>Cliente</th>
+                  <th>Fecha</th>
+                  <th>Estado</th>
+                  <th>Metodo de pago</th>
                   <th>Accion</th>
                 </tr>
               </thead>
 
               <tbody>
                 {currentBudgets.map((budget, index) => {
-                  const { _id, category, sku, description, presentation } =
-                    budget;
+                  const {
+                    _id,
+                    budgetId,
+                    client,
+                    budgetDate,
+                    prospectStatus,
+                    paymentMethod,
+                  } = budget;
                   return (
                     <tr key={_id}>
-                      <td>{sku}</td>
-                      <td>{category}</td>
-                      <td>{description}</td>
-                      <td>{presentation}</td>
+                      <td>{budgetId}</td>
+                      <td>{client.name}</td>
+                      <td>{moment(budgetDate).format("DD/MM/YYYY")}</td>
+                      <td>{ProspectStatusValues[prospectStatus]}</td>
+                      <td>{PaymentMethodsValues[paymentMethod]}</td>
                       <td className="icons">
                         <span>
                           <Link to={`/budget-detail/${_id}`}>
                             <AiOutlineEye size={25} color={"purple"} />
-                          </Link>
-                        </span>
-                        <span>
-                          <Link to={`/edit-budget/${_id}`}>
-                            <FaEdit size={20} color={"green"} />
                           </Link>
                         </span>
                         <span>

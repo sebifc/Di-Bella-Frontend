@@ -53,7 +53,7 @@ const ClientDetail = () => {
   const getPaymentCondition = () => {
     const conditions = {
       0: "Efectivo contra entrega",
-      1: "Transferencia contranetrega",
+      1: "Transferencia contraentrega",
       2: "Transferencia a 30 dias",
       3: "Cheque a 30 dias",
       4: "Cheque a 60 dias",

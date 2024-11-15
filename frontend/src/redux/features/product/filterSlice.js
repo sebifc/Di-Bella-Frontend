@@ -67,9 +67,10 @@ const filterSlice = createSlice({
     },
     FILTER_BUDGETS(state, action) {
       const { budgets, search } = action.payload;
-      const tempBudgets = budgets.filter((budget) =>
+      /* const tempBudgets = budgets.filter((budget) =>
         budget.sku.toString().includes(search.toLowerCase())
-      );
+      ); */
+      const tempBudgets = budgets;
       state.filteredBudgets = tempBudgets;
     },
   },
