@@ -144,7 +144,7 @@ const BudgetList = ({ budgets, isLoading }) => {
                       <td>{PaymentMethodsValues[paymentMethod]}</td>
                       <td className="icons">
                         <span>
-                          <Link to={`/budget-detail/${_id}`}>
+                          <Link to={`/budget/${_id}`}>
                             <AiOutlineEye size={25} color={"purple"} />
                           </Link>
                         </span>

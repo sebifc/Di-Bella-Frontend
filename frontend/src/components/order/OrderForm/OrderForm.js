@@ -233,17 +233,6 @@ const OrderForm = ({
                 </option>
               ))}
             </select>
-            {/* <Select
-              name="sku"
-              options={items.map((sku) => ({
-                value: sku._id,
-                label: `${sku.sku} - ${sku.category} - ${sku.presentation}`,
-              }))}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              onChange={handleSelectItemChange}
-            /> */}
-            {item.item._id}
 
             <label>Cantidad:</label>
             <input
