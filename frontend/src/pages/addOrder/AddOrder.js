@@ -10,15 +10,9 @@ import {
 
 const initialState = {
   sku: null,
-  minimumUnit: "",
-  brand: "",
-  ean13: 0,
-  batch: "",
-  expiration: "",
   supplier: null,
   refer: "",
   invoiceNumber: "",
-  itemPurchasePrice: 0,
   transport: 0,
   hygienic: "",
 };
@@ -39,23 +33,21 @@ const AddOrder = () => {
     setOrder({ ...order, [name]: e.map((e) => e.value) });
   };
 
+  const handleItemsChange = (items) => {
+    setOrder({ ...order, sku: items });
+  };
+
   const saveOrder = async (e) => {
     e.preventDefault();
     const formData = new FormData();
 
     formData.append("sku", JSON.stringify(order?.sku));
-    formData.append("minimumUnit", order?.minimumUnit);
-    formData.append("brand", order?.brand);
-    formData.append("ean13", order?.ean13);
-    formData.append("batch", order?.batch);
-    formData.append("expiration", order?.expiration);
     formData.append("supplier", JSON.stringify(order?.supplier));
-    formData.append("refer", order?.refer);
     formData.append("invoiceNumber", order?.invoiceNumber);
-    formData.append("itemPurchasePrice", order?.itemPurchasePrice);
     formData.append("transport", order?.transport);
     formData.append("hygienic", order?.hygienic);
-
+    formData.append("refer", order?.refer);
+    
     await dispatch(createOrder(formData));
 
     navigate("/orders");
@@ -69,6 +61,7 @@ const AddOrder = () => {
         order={order}
         handleInputChange={handleInputChange}
         handeSelectChange={handeSelectChange}
+        handleItemsChange={handleItemsChange}
         saveOrder={saveOrder}
       />
     </div>

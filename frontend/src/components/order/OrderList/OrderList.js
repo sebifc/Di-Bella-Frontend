@@ -76,7 +76,7 @@ const OrderList = ({ orders, isLoading }) => {
   };
 
   const getItemsSKU = (skus) => {
-    const skuNames = skus.map((sku) => sku.sku);
+    const skuNames = skus.map(({ item }) => item.sku);
     return skuNames.join(", ");
   };
 
@@ -167,11 +167,9 @@ const OrderList = ({ orders, isLoading }) => {
             <table>
               <thead>
                 <tr>
+                  <th>Nro</th>
                   <th>Factura de Compra Nro</th>
-                  <th>Marca</th>
                   <th>Proveedores</th>
-                  <th>Vencimiento</th>
-                  <th>Lote</th>
                   <th>SKUs</th>
                   <th>Modificado por</th>
                   <th>Accion</th>
@@ -180,27 +178,13 @@ const OrderList = ({ orders, isLoading }) => {
 
               <tbody>
                 {currentItems.map((order, index) => {
-                  const {
-                    _id,
-                    invoiceNumber,
-                    brand,
-                    supplier,
-                    expiration,
-                    batch,
-                    user_name,
-                    sku,
-                  } = order;
+                  const { _id, invoiceNumber, supplier, user_name, sku, orderId } =
+                    order;
                   return (
                     <tr key={_id}>
+                      <td>#{orderId}</td>
                       <td>{invoiceNumber}</td>
-                      <td>{brand}</td>
                       <td>{getSuppliersNames(supplier)}</td>
-                      <td>
-                        {expiration
-                          ? moment(expiration).format("DD/MM/YYYY")
-                          : "Sin fecha de vencimiento"}
-                      </td>
-                      <td>{batch}</td>
                       <td>{getItemsSKU(sku)}</td>
                       <td>{user_name}</td>
                       <td className="icons">
@@ -210,7 +194,7 @@ const OrderList = ({ orders, isLoading }) => {
                           </Link>
                         </span>
                         <span>
-                          <Link to={`/edit-order/${_id}`}>
+                          <Link to={`/edit-order/${_id}`} reloadDocument>
                             <FaEdit size={20} color={"green"} />
                           </Link>
                         </span>

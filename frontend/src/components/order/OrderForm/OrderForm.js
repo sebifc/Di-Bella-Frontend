@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsLoggedIn } from "../../../redux/features/auth/authSlice";
@@ -9,13 +9,75 @@ import Loader from "../../loader/Loader";
 import "./OrderForm.scss";
 import moment from "moment";
 import Select from "react-select";
+import Modal from "../../Modal/Modal";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
 const OrderForm = ({
   order,
   handleInputChange,
   saveOrder,
   handeSelectChange,
+  handleItemsChange,
+  isEdit = false,
 }) => {
+  const [modal, setModal] = useState(false);
+  const [isEditItem, setIsEditItem] = useState(false);
+  const [item, setItem] = useState({
+    item: "",
+    minimumUnit: "",
+    brand: "",
+    ean13: "",
+    batch: "",
+    expiration: "",
+    itemPurchasePrice: "",
+  });
+  const [orderItems, setOrderItems] = useState(isEdit ? order?.sku : []);
+
+  const handleInputItemChange = (e) => {
+    setItem({
+      ...item,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSelectItemChange = (selectedOption) => {
+    setItem({
+      ...item,
+      item: selectedOption.value,
+    });
+  };
+
+  const handleSave = () => {
+    if (!item.item || !item.minimumUnit) {
+      alert("Por favor, completa todos los campos obligatorios.");
+      return;
+    }
+
+    if (isEditItem) {
+      setOrderItems(
+        orderItems.map((orderItem) =>
+          orderItem._id === item._id ? item : orderItem
+        )
+      );
+    } else setOrderItems([...orderItems, item]);
+
+    setItem({
+      item: "",
+      minimumUnit: "",
+      brand: "",
+      ean13: "",
+      batch: "",
+      expiration: "",
+      itemPurchasePrice: "",
+    });
+    setModal(false);
+    setIsEditItem(false);
+  };
+
+  useEffect(() => {
+    handleItemsChange(orderItems);
+  }, [orderItems]);
+
   const types = {
     0: "A cargo nuestro",
     1: "A cargo del proveedor",
@@ -55,14 +117,7 @@ const OrderForm = ({
   ]);
 
   const validateButton = () => {
-    if (
-      order?.sku?.length === 0 ||
-      !order?.minimumUnit
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    return order?.sku?.length === 0;
   };
 
   const getDefaultValueSupplier = () => {
@@ -76,15 +131,9 @@ const OrderForm = ({
       : null;
   };
 
-  const getDefaultValueSku = () => {
-    return order?.sku?.length > 0
-      ? items
-          .filter((sku) => order?.sku?.includes(sku._id))
-          .map((sku) => ({
-            value: sku._id,
-            label: sku.sku,
-          }))
-      : null;
+  const getLabelItem = (orderItem) => {
+    const item = items.find((item) => item._id === orderItem.item);
+    return item ? `${item.sku} - ${item.category} - ${item.presentation}` : "";
   };
 
   return (
@@ -92,7 +141,178 @@ const OrderForm = ({
       {(isLoadingItem || isLoadingSupplier) && <Loader />}
       <Card cardClass={"card"}>
         <form onSubmit={saveOrder}>
-          <label>SKUs</label>
+          <div className="table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Cantidad</th>
+                  <th>Precio</th>
+                  <th>Marca</th>
+                  <th>Lote</th>
+                  <th>EAN13</th>
+                  <th>Expiración</th>
+                  {isEdit && <th>Acciones</th>}
+                </tr>
+              </thead>
+
+              <tbody>
+                {orderItems.length > 0 &&
+                  orderItems.map((orderItem, index) => (
+                    <tr key={index}>
+                      <td>{getLabelItem(orderItem)}</td>
+                      <td>{orderItem.minimumUnit}</td>
+                      <td>{orderItem.itemPurchasePrice}$</td>
+                      <td>{orderItem.brand}</td>
+                      <td>{orderItem.batch}</td>
+                      <td>{orderItem.ean13}</td>
+                      <td>{orderItem.expiration}</td>
+                      {isEdit && (
+                        <td>
+                          <button
+                            type="button"
+                            className="--btn --btn-danger"
+                            onClick={() =>
+                              setOrderItems(
+                                orderItems.filter(
+                                  (item) => item !== orderItems[index]
+                                )
+                              )
+                            }
+                          >
+                            <FaTrashAlt />
+                          </button>
+                          <button
+                            type="button"
+                            className="--btn --btn-primary"
+                            onClick={() => {
+                              setItem(orderItem);
+                              setIsEditItem(true);
+                              setModal(true);
+                            }}
+                          >
+                            <FaEdit />
+                          </button>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                <tr>
+                  <td colSpan={"8"}>
+                    <button
+                      type="button"
+                      className="--btn --btn-primary --width-100"
+                      onClick={() => setModal(true)}
+                    >
+                      Agregar item
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <Modal openModal={modal}>
+            <label>SKUs</label>
+            <select
+              name="sku"
+              value={item.item}
+              onChange={({ target: { value } }) => {
+                setItem({
+                  ...item,
+                  item: value,
+                });
+              }}
+            >
+              <option value="" disabled>
+                -- Seleccione --
+              </option>
+              {items.map((sku) => (
+                <option key={sku._id} value={sku._id}>
+                  {sku.sku} - {sku.category} - {sku.presentation}
+                </option>
+              ))}
+            </select>
+
+            <label>Cantidad:</label>
+            <input
+              type="number"
+              placeholder="Cantidad"
+              name="minimumUnit"
+              value={item.minimumUnit}
+              onChange={handleInputItemChange}
+            />
+
+            <label>Marca:</label>
+            <input
+              type="text"
+              placeholder="Marca"
+              name="brand"
+              value={item.brand}
+              onChange={handleInputItemChange}
+            />
+
+            <label>EAN13:</label>
+            <input
+              type="number"
+              maxLength={13}
+              placeholder="EAN13"
+              name="ean13"
+              value={item.ean13}
+              onChange={handleInputItemChange}
+            />
+
+            <label>Lote:</label>
+            <input
+              type="text"
+              placeholder="Lote"
+              name="batch"
+              value={item.batch}
+              onChange={handleInputItemChange}
+            />
+
+            <label>Vencimiento:</label>
+            <input
+              type="date"
+              placeholder="Vencimiento"
+              name="expiration"
+              value={
+                item.expiration
+                  ? moment(item.expiration).format("YYYY-MM-DD")
+                  : ""
+              }
+              onChange={handleInputItemChange}
+            />
+
+            <label>Precio de compras del ítem (sin IVA):</label>
+            <input
+              type="number"
+              placeholder="Precio"
+              name="itemPurchasePrice"
+              value={item.itemPurchasePrice}
+              onChange={handleInputItemChange}
+            />
+
+            <div className="--flex-center">
+              <button
+                className="--btn --btn-primary"
+                type="button"
+                onClick={handleSave}
+              >
+                Guardar
+              </button>
+
+              <button
+                className="--btn --btn-danger"
+                type="button"
+                onClick={() => setModal(false)}
+              >
+                Cerrar
+              </button>
+            </div>
+          </Modal>
+
+          {/* <label>SKUs</label>
           <Select
             value={getDefaultValueSku()}
             isMulti
@@ -154,7 +374,7 @@ const OrderForm = ({
                 : ""
             }
             onChange={handleInputChange}
-          />
+          /> */}
 
           <label>Proveedor</label>
           <Select
@@ -188,14 +408,14 @@ const OrderForm = ({
             onChange={handleInputChange}
           />
 
-          <label>Precio de compras del ítem (sin IVA):</label>
+          {/* <label>Precio de compras del ítem (sin IVA):</label>
           <input
             type="number"
             placeholder="Precio"
             name="itemPurchasePrice"
             value={order?.itemPurchasePrice}
             onChange={handleInputChange}
-          />
+          /> */}
 
           <label>Transporte:</label>
           <select

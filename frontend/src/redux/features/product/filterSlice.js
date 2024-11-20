@@ -6,6 +6,7 @@ const initialState = {
   filteredClients: [],
   filteredOrders: [],
   filteredItems: [],
+  filteredBudgets: [],
 };
 
 const filterSlice = createSlice({
@@ -47,7 +48,12 @@ const filterSlice = createSlice({
     FILTER_ORDERS(state, action) {
       const { orders, search } = action.payload;
       const tempOrders = orders.filter((order) =>
-        order.sku.find(({sku}) => sku.toString().includes(search.toLowerCase()))
+        order.sku.find(({ item }) => {
+          if (typeof item === "string") {
+            return item.toLowerCase().includes(search.toLowerCase());
+          }
+          return item?.sku.toString().includes(search.toLowerCase());
+        })
       );
 
       state.filteredOrders = tempOrders;
@@ -59,6 +65,14 @@ const filterSlice = createSlice({
       );
       state.filteredItems = tempItems;
     },
+    FILTER_BUDGETS(state, action) {
+      const { budgets, search } = action.payload;
+      /* const tempBudgets = budgets.filter((budget) =>
+        budget.sku.toString().includes(search.toLowerCase())
+      ); */
+      const tempBudgets = budgets;
+      state.filteredBudgets = tempBudgets;
+    },
   },
 });
 
@@ -68,6 +82,7 @@ export const {
   FILTER_CLIENTS,
   FILTER_ORDERS,
   FILTER_ITEMS,
+  FILTER_BUDGETS,
 } = filterSlice.actions;
 
 export const selectFilteredPoducts = (state) => state.filter.filteredProducts;
@@ -76,5 +91,6 @@ export const selectFilteredSuppliers = (state) =>
 export const selectFilteredClients = (state) => state.filter.filteredClients;
 export const selectFilteredOrders = (state) => state.filter.filteredOrders;
 export const selectFilteredItems = (state) => state.filter.filteredItems;
+export const selectFilteredBudgets = (state) => state.filter.filteredBudgets;
 
 export default filterSlice.reducer;

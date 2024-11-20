@@ -29,7 +29,10 @@ const EditOrder = () => {
     if (orderEdit) {
       setOrder({
         ...orderEdit,
-        sku: orderEdit?.sku?.map((sku) => sku._id),
+        sku: orderEdit?.sku?.map((data) => ({
+          ...data,
+          item: data?.item?._id,
+        })),
         supplier: orderEdit?.supplier?.map((supplier) => supplier._id),
       });
     }
@@ -49,21 +52,19 @@ const EditOrder = () => {
     const formData = new FormData();
 
     formData.append("sku", JSON.stringify(order?.sku));
-    formData.append("minimumUnit", order?.minimumUnit);
-    formData.append("brand", order?.brand);
-    formData.append("ean13", order?.ean13);
-    formData.append("batch", order?.batch);
-    formData.append("expiration", order?.expiration);
     formData.append("supplier", JSON.stringify(order?.supplier));
-    formData.append("refer", order?.refer);
     formData.append("invoiceNumber", order?.invoiceNumber);
-    formData.append("itemPurchasePrice", order?.itemPurchasePrice);
     formData.append("transport", order?.transport);
     formData.append("hygienic", order?.hygienic);
+    formData.append("refer", order?.refer);
 
     await dispatch(updateOrder({ id, formData }));
     await dispatch(getOrders());
     navigate("/orders");
+  };
+
+  const handleItemsChange = (items) => {
+    setOrder({ ...order, sku: items });
   };
 
   return (
@@ -76,7 +77,9 @@ const EditOrder = () => {
           order={order}
           handleInputChange={handleInputChange}
           handeSelectChange={handeSelectChange}
+          handleItemsChange={handleItemsChange}
           saveOrder={saveOrder}
+          isEdit={true}
         />
       )}
     </div>

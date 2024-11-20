@@ -1,23 +1,33 @@
-.order-detail {
+.add-budget {
   margin-bottom: 5rem;
-  width: 100%;
   .card {
     width: 100%;
     padding: 1rem;
+    overflow: initial;
   }
-  .detail {
-    & > * {
-      margin-bottom: 1rem;
+  form {
+    label {
+      display: block;
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: var(--color-dark);
     }
-    .badge {
-      background-color: var(--color-danger);
-      color: #fff;
-      padding-left: 2px;
-      padding-right: 2px;
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    input[type="email"],
+    input[type="date"],
+    select,
+    input[type="password"] {
+      display: block;
+      font-size: 1.6rem;
+      font-weight: 300;
+      padding: 1rem;
+      margin: 1rem auto;
+      width: 100%;
+      border: 1px solid #777;
       border-radius: 3px;
-    }
-    p b {
-      color: var(--dark-blue);
+      outline: none;
     }
   }
 
@@ -72,6 +82,17 @@
           background-color: rgba(31, 147, 255, 0.3);
         }
       }
+    }
+  }
+
+  &__modal {
+    display: flex;
+    flex-direction: column;
+
+    &-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
     }
   }
 }
