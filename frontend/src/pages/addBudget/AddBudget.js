@@ -36,20 +36,31 @@ const AddBudget = () => {
   };
 
   const saveBudget = async (itemsBudget) => {
-    const dataItemsBudget = itemsBudget.map(({ _id, price, quantity }) => ({
-      sku: _id,
-      itemPurchasePrice: price,
-      quantity,
-    }));
+    const dataItemsBudget = itemsBudget.map(
+      ({ _id, purchasePrice, salePrice, quantity, expiration }) => ({
+        sku: _id,
+        itemPurchasePrice: purchasePrice,
+        itemSalePrice: salePrice,
+        quantity,
+        expiration,
+      })
+    );
 
-    await dispatch(createBudget({ ...budget, items: dataItemsBudget }));
+    const budgetCreated = await dispatch(
+      createBudget({ ...budget, items: dataItemsBudget })
+    );
 
     const dataItemsReserve = itemsBudget.map(({ _id, quantity }) => ({
       sku: _id,
       quantity,
     }));
 
-    await stockService.reserve({ items: dataItemsReserve });
+    if (budgetCreated) {
+      await stockService.reserve({
+        budgetId: budgetCreated.payload._id,
+        items: dataItemsReserve,
+      });
+    }
 
     navigate("/budgets");
   };

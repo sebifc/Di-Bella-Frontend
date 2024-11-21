@@ -6,6 +6,7 @@ import "./BudgetForm.scss";
 import { FaTrashAlt } from "react-icons/fa";
 import Modal from "../../Modal/Modal";
 import stockService from "../../../redux/features/stock/stockServices";
+import moment from "moment";
 
 const BudgetForm = ({
   budget,
@@ -64,9 +65,11 @@ const BudgetForm = ({
 
     const item = {
       ...response.item,
+      expiration: response.stockInfo.expiration,
       quantity: parseInt(checkStock.quantity),
-      price: response.stockInfo.purchasePrice,
-      total: response.stockInfo.purchasePrice * checkStock.quantity,
+      purchasePrice: response.stockInfo.purchasePrice,
+      salePrice: 0,
+      total: 0,
     };
 
     if (response.available) {
@@ -91,6 +94,13 @@ const BudgetForm = ({
       budget.paymentMethod !== null &&
       itemsBudget.length > 0
     );
+  };
+
+  const numberToPrice = (number) => {
+    return new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "ARS",
+    }).format(number);
   };
 
   return (
@@ -162,8 +172,10 @@ const BudgetForm = ({
               <thead>
                 <tr>
                   <th>SKU</th>
-                  <th>Precio</th>
+                  <th>Expiración</th>
+                  <th>Precio de compra</th>
                   <th>Cantidad</th>
+                  <th>Precio de venta</th>
                   <th>Total</th>
                   <th>Acciones</th>
                 </tr>
@@ -174,9 +186,25 @@ const BudgetForm = ({
                   itemsBudget.map((ib, index) => (
                     <tr key={index}>
                       <td>{getLabelItem(ib)}</td>
-                      <td>{ib.price}$</td>
+                      <td>{moment(ib.expiration).format("DD/MM/YYYY")}</td>
+                      <td>{numberToPrice(ib.purchasePrice)}</td>
                       <td>{ib.quantity}</td>
-                      <td>{ib.total}$</td>
+                      <td>
+                        <input
+                          type="number"
+                          name="price"
+                          value={ib.price}
+                          style={{ fontSize: "14px", margin: "0px" }}
+                          onChange={(e) => {
+                            const newItems = [...itemsBudget];
+                            newItems[index].salePrice = e.target.value;
+                            newItems[index].total =
+                              e.target.value * ib.quantity;
+                            setItemsBudget(newItems);
+                          }}
+                        />
+                      </td>
+                      <td>{numberToPrice(ib.total)}</td>
                       <td>
                         <button
                           type="button"
@@ -193,11 +221,11 @@ const BudgetForm = ({
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan={3}>
+                  <td colSpan={5}>
                     <strong>Total</strong>
                   </td>
                   <td>
-                    <strong>{getTotal()}$</strong>
+                    <strong>{numberToPrice(getTotal())}</strong>
                   </td>
                   <td></td>
                 </tr>
