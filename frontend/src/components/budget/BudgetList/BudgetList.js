@@ -7,7 +7,10 @@ import { FaTrashAlt } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { deleteBudget } from "../../../redux/features/budgets/budgetSlice";
+import {
+  deleteBudget,
+  getBudgets,
+} from "../../../redux/features/budgets/budgetSlice";
 import {
   FILTER_BUDGETS,
   selectFilteredBudgets,
@@ -39,6 +42,7 @@ const BudgetList = ({ budgets, isLoading }) => {
 
   const delBudget = async (id) => {
     await dispatch(deleteBudget(id));
+    await dispatch(getBudgets());
     await dispatch(FILTER_BUDGETS({ budgets, search }));
   };
 
@@ -88,7 +92,7 @@ const BudgetList = ({ budgets, isLoading }) => {
       <div className="table">
         <div className="--flex-between --flex-dir-column">
           <span>
-            <h3>Budgets</h3>
+            <h3>Presupuestos</h3>
           </span>
           <span>
             <Search
@@ -102,7 +106,7 @@ const BudgetList = ({ budgets, isLoading }) => {
         <div className="--flex-end">
           <Link to={`/add-budget`}>
             <button type="button" className="--btn --btn-primary">
-              Cargar budget
+              Crear Presupuesto
             </button>
           </Link>
         </div>

@@ -49,6 +49,13 @@ const BudgetDetail = () => {
     return item ? `${item.sku} - ${item.category} - ${item.presentation}` : "";
   };
 
+  const numberToPrice = (number) => {
+    return new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "ARS",
+    }).format(number);
+  };
+
   return (
     <div className="budget-detail">
       <h3 className="--mt">Presupuesto N° {budget && budget.budgetId}</h3>
@@ -77,8 +84,10 @@ const BudgetDetail = () => {
                 <thead>
                   <tr>
                     <th>SKU</th>
-                    <th>Precio</th>
+                    <th>Expiración</th>
+                    <th>Precio de Compra</th>
                     <th>Cantidad</th>
+                    <th>Precio de Venta</th>
                     <th>Total</th>
                   </tr>
                 </thead>
@@ -87,9 +96,13 @@ const BudgetDetail = () => {
                     budget.items.map((item, index) => (
                       <tr key={index}>
                         <td>{getLabelItem(item.sku)}</td>
-                        <td>{item.itemPurchasePrice}$</td>
+                        <td>{moment(item.expiration).format("DD/MM/YYYY")}</td>
+                        <td>{numberToPrice(item.itemPurchasePrice)}</td>
                         <td>{item.quantity}</td>
-                        <td>{item.itemPurchasePrice * item.quantity}$</td>
+                        <td>{numberToPrice(item.itemSalePrice)}</td>
+                        <td>
+                          {numberToPrice(item.itemSalePrice * item.quantity)}
+                        </td>
                       </tr>
                     ))}
                 </tbody>
