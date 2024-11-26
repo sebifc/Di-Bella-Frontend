@@ -30,12 +30,21 @@ const BudgetForm = ({
     3: "Cheque a 30 dias",
     4: "Cheque a 60 dias",
   };
+
+  const Sellers = {
+    0: "DIANA COCH",
+    1: "FERNANDO PAZZANO",
+    2: "LUCILA DI BELLA",
+    3: "VENDEDOR EXTERNO",
+  };
   const defaultCheckStock = {
     sku: "",
     quantity: 0,
     available: 0,
     loading: false,
     message: "",
+    availableStock: 0,
+    budgetsId: [],
   };
   const [itemsBudget, setItemsBudget] = useState([]);
   const [modal, setModal] = useState(false);
@@ -47,16 +56,19 @@ const BudgetForm = ({
 
   const verify = async () => {
     setCheckStock({ ...checkStock, loading: true });
-    const { available } = await stockService.checkStockAvailability(
-      checkStock.sku,
-      checkStock.quantity
-    );
+    const { available, availableStock, budgetsId } =
+      await stockService.checkStockAvailability(
+        checkStock.sku,
+        checkStock.quantity
+      );
 
     setCheckStock({
       ...checkStock,
       available,
       loading: false,
       message: available ? "Hay stock ✅" : "Stock insuficiente ❌",
+      availableStock,
+      budgetsId,
     });
   };
 
@@ -68,6 +80,7 @@ const BudgetForm = ({
       expiration: response.stockInfo.expiration,
       quantity: parseInt(checkStock.quantity),
       purchasePrice: response.stockInfo.purchasePrice,
+      brand: response.stockInfo.brand,
       salePrice: 0,
       total: 0,
     };
@@ -92,7 +105,9 @@ const BudgetForm = ({
       budget.client &&
       budget.status !== null &&
       budget.paymentMethod !== null &&
-      itemsBudget.length > 0
+      budget.seller !== null &&
+      itemsBudget.length > 0 &&
+      getTotal() > 0
     );
   };
 
@@ -165,6 +180,22 @@ const BudgetForm = ({
             ))}
           </select>
 
+          <label>Vendedor:</label>
+          <select
+            name="seller"
+            value={budget.seller}
+            onChange={handleInputChange}
+          >
+            <option selected value="" disabled>
+              -- Seleccione --
+            </option>
+            {Object.keys(Sellers).map((key) => (
+              <option key={key} value={key}>
+                {Sellers[key]}
+              </option>
+            ))}
+          </select>
+
           <h4>Items</h4>
 
           <div className="table">
@@ -172,6 +203,7 @@ const BudgetForm = ({
               <thead>
                 <tr>
                   <th>SKU</th>
+                  <th>Marca</th>
                   <th>Expiración</th>
                   <th>Precio de compra</th>
                   <th>Cantidad</th>
@@ -186,6 +218,7 @@ const BudgetForm = ({
                   itemsBudget.map((ib, index) => (
                     <tr key={index}>
                       <td>{getLabelItem(ib)}</td>
+                      <td>{ib.brand}</td>
                       <td>{moment(ib.expiration).format("DD/MM/YYYY")}</td>
                       <td>{numberToPrice(ib.purchasePrice)}</td>
                       <td>{ib.quantity}</td>
@@ -269,7 +302,7 @@ const BudgetForm = ({
                 </option>
                 {items.map((sku) => (
                   <option key={sku._id} value={sku._id}>
-                    {sku.sku} - {sku.category} - {sku.presentation}
+                    {sku.sku} - {sku.description} - {sku.presentation}
                   </option>
                 ))}
               </select>
@@ -303,7 +336,18 @@ const BudgetForm = ({
               )}
 
               {checkStock.message && (
-                <p className="--my">{checkStock.message}</p>
+                <div className="--my">
+                  <p>{checkStock.message}</p>
+                  <p>Disponible: {checkStock.availableStock}</p>
+                  {checkStock.budgetsId.length > 0 ? (
+                    <p>
+                      Este sku pertenece a los siguientes presupuestos:{" "}
+                      {checkStock.budgetsId.join(", ")}
+                    </p>
+                  ) : (
+                    <p>No pertenece a ningun presupuesto</p>
+                  )}
+                </div>
               )}
 
               <div className="add-budget__modal-actions">
