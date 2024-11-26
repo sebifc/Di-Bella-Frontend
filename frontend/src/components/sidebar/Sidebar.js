@@ -40,6 +40,7 @@ const Sidebar = ({ children }) => {
       </div>
 
       <main
+        className="main-print"
         style={{
           paddingLeft: isOpen ? "230px" : "60px",
           transition: "all .5s",

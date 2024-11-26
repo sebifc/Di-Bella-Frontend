@@ -40,6 +40,13 @@ const BudgetList = ({ budgets, isLoading }) => {
     4: "Cheque a 60 dias",
   });
 
+  const Sellers = {
+    0: "DIANA COCH",
+    1: "FERNANDO PAZZANO",
+    2: "LUCILA DI BELLA",
+    3: "VENDEDOR EXTERNO",
+  };
+
   const delBudget = async (id) => {
     await dispatch(deleteBudget(id));
     await dispatch(getBudgets());
@@ -125,6 +132,7 @@ const BudgetList = ({ budgets, isLoading }) => {
                   <th>Fecha</th>
                   <th>Estado</th>
                   <th>Metodo de pago</th>
+                  <th>Vendedor</th>
                   <th>Accion</th>
                 </tr>
               </thead>
@@ -138,6 +146,7 @@ const BudgetList = ({ budgets, isLoading }) => {
                     budgetDate,
                     prospectStatus,
                     paymentMethod,
+                    seller,
                   } = budget;
                   return (
                     <tr key={_id}>
@@ -146,6 +155,7 @@ const BudgetList = ({ budgets, isLoading }) => {
                       <td>{moment(budgetDate).format("DD/MM/YYYY")}</td>
                       <td>{ProspectStatusValues[prospectStatus]}</td>
                       <td>{PaymentMethodsValues[paymentMethod]}</td>
+                      <td>{Sellers[seller]}</td>
                       <td className="icons">
                         <span>
                           <Link to={`/budget/${_id}`}>

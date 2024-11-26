@@ -17,6 +17,16 @@ main {
   overflow: auto;
   color: var(-color-dark);
   transition: all 0.5s;
+
+  @media print {
+    display: none;
+  }
+}
+
+.main-print {
+  @media print {
+    padding: 0 !important;
+  }
 }
 
 .top_section {
