@@ -81,7 +81,7 @@ const BudgetForm = ({
       quantity: parseInt(checkStock.quantity),
       purchasePrice: response.stockInfo.purchasePrice,
       brand: response.stockInfo.brand,
-      salePrice: 0,
+      salePrice: response.item?.itemSalePrice ?? 0,
       total: 0,
     };
 
@@ -226,7 +226,7 @@ const BudgetForm = ({
                         <input
                           type="number"
                           name="price"
-                          value={ib.price}
+                          value={ib.salePrice}
                           style={{ fontSize: "14px", margin: "0px" }}
                           onChange={(e) => {
                             const newItems = [...itemsBudget];
