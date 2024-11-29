@@ -32,12 +32,18 @@ const updateItem = async (id, formData) => {
   return response.data;
 };
 
+const saveSalePrice = async (items) => {
+  const response = await axios.post(`${API_URL}save-sale-price`, { items });
+  return response;
+};
+
 const ItemService = {
   createItem,
   getItems,
   getItem,
   deleteItem,
   updateItem,
+  saveSalePrice,
 };
 
 export default ItemService;
