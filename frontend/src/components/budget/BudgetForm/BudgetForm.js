@@ -410,7 +410,9 @@ const BudgetForm = ({
                 saveBudget(itemsBudget);
               }}
             >
-              Crear Presupuesto
+              {isEdit
+                ? "Aprobar presupuesto con modifaciones y crear venta"
+                : "Crear Presupuesto"}
             </button>
           </div>
         </form>
