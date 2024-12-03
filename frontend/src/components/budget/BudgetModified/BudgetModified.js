@@ -5,7 +5,6 @@ import Loader from "../../loader/Loader";
 import BudgetForm from "../../budget/BudgetForm/BudgetForm";
 import {
   createBudget,
-  selectIsLoading,
   getBudget,
 } from "../../../redux/features/budgets/budgetSlice";
 import { selectIsLoggedIn } from "../../../redux/features/auth/authSlice";
@@ -40,7 +39,7 @@ const BudgetModified = () => {
   };
 
   const saveBudget = async (itemsBudget) => {
-    /* const dataItemsBudget = itemsBudget.map(
+    const dataItemsBudget = itemsBudget.map(
       ({
         _id,
         purchasePrice,
@@ -61,7 +60,12 @@ const BudgetModified = () => {
     );
 
     const budgetCreated = await dispatch(
-      createBudget({ ...budget, items: dataItemsBudget })
+      createBudget({
+        ...budget,
+        items: dataItemsBudget,
+        isUpdate: true,
+        id: id,
+      })
     );
 
     const dataItemsReserve = itemsBudget.map(({ _id, quantity }) => ({
@@ -76,7 +80,7 @@ const BudgetModified = () => {
       });
     }
 
-    navigate("/budgets"); */
+    navigate("/budgets");
   };
 
   useEffect(() => {

@@ -124,6 +124,23 @@ export const approveBudget = createAsyncThunk(
     }
   }
 );
+export const approvedModificationsBudget = createAsyncThunk(
+  "budgets/approveModifiactions",
+  async (id, thunkAPI) => {
+    try {
+      return await budgetService.approvedModificationsBudget(id);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      console.log(message);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 const budgetSlice = createSlice({
   name: "budget",
@@ -216,6 +233,23 @@ const budgetSlice = createSlice({
         toast.success("Presupuesto aprobado");
       })
       .addCase(approveBudget.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+      .addCase(approvedModificationsBudget.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(approvedModificationsBudget.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        toast.success(
+          "Se cambio el estado del presupuesto a aprobado con modificaciones"
+        );
+      })
+      .addCase(approvedModificationsBudget.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

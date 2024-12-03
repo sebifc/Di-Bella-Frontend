@@ -7,6 +7,7 @@ import {
   cancelBudget,
   approveBudget,
   getBudget,
+  approvedModificationsBudget,
 } from "../../../redux/features/budgets/budgetSlice";
 import Card from "../../card/Card";
 import { SpinnerImg } from "../../loader/Loader";
@@ -116,6 +117,26 @@ const BudgetDetail = () => {
     });
   };
 
+  const confirmApproveModification = () => {
+    confirmAlert({
+      title: "Aprobar Presupuesto con Modificaciones",
+      message:
+        "¿Desea aprobar el presupuesto con modificaciones? ATENCION: Al hacer esto el stock reservado volvera a estar disponible.",
+      buttons: [
+        {
+          label: "Aprobar",
+          onClick: async () => {
+            dispatch(approvedModificationsBudget(id));
+            navigate(`/budget-modified/${id}`);
+          },
+        },
+        {
+          label: "Cerrar",
+        },
+      ],
+    });
+  };
+
   const setColorStatus = (status) => {
     if (status === 0) {
       return "var(--color-info)";
@@ -172,16 +193,13 @@ const BudgetDetail = () => {
           >
             Aprobado
           </button>
-
-          <Link to={`/budget-modified/${id}`}>
-            <button
-              type="button"
-              className="--btn --btn-primary-outline"
-              onClick={() => {}}
-            >
-              Aprobado con Modificaciones
-            </button>
-          </Link>
+          <button
+            type="button"
+            className="--btn --btn-primary-outline"
+            onClick={confirmApproveModification}
+          >
+            Aprobado con Modificaciones
+          </button>
         </div>
       )}
       <Card cardClass="card">

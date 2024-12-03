@@ -79,13 +79,13 @@ const BudgetForm = ({
 
     const item = {
       ...response.item,
-      expiration: response.stockInfo.expiration /*  */,
-      quantity: parseInt(checkStock.quantity) /*  */,
-      purchasePrice: response.stockInfo.purchasePrice /*  */,
-      brand: response.stockInfo.brand /*  */,
-      batch: response.stockInfo.batch /*  */,
-      salePrice: response.item?.itemSalePrice ?? 0 /*  */,
-      total: 0,
+      expiration: response.stockInfo.expiration,
+      quantity: parseInt(checkStock.quantity),
+      purchasePrice: response.stockInfo.purchasePrice,
+      brand: response.stockInfo.brand,
+      batch: response.stockInfo.batch,
+      salePrice: response.item?.itemSalePrice ?? 0,
+      total: response.item?.itemSalePrice * parseInt(checkStock.quantity),
     };
 
     if (response.available) {
@@ -150,7 +150,7 @@ const BudgetForm = ({
           <label>Cliente:</label>
           <select
             name="client"
-            value={budget.client}
+            value={isEdit ? budget.client._id : budget.client}
             onChange={(e) => {
               handleInputChange(e);
               const client = clients.find(
@@ -223,8 +223,6 @@ const BudgetForm = ({
           </select>
 
           <h4>Items</h4>
-
-          {/* <pre>{JSON.stringify(itemsBudget, null, 2)}</pre> */}
 
           <div className="table">
             <table>

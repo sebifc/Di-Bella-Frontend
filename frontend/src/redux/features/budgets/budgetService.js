@@ -37,6 +37,11 @@ const approveBudget = async (id) => {
   return response.data;
 };
 
+const approvedModificationsBudget = async (id) => {
+  const response = await axios.put(`${API_URL}approve-modifications/${id}`);
+  return response.data;
+};
+
 const budgetservice = {
   createBudget,
   getBudgets,
@@ -44,6 +49,7 @@ const budgetservice = {
   deleteBudget,
   cancelBudget,
   approveBudget,
+  approvedModificationsBudget,
 };
 
 export default budgetservice;
