@@ -38,13 +38,14 @@ const AddBudget = () => {
 
   const saveBudget = async (itemsBudget) => {
     const dataItemsBudget = itemsBudget.map(
-      ({ _id, purchasePrice, salePrice, quantity, expiration, brand }) => ({
+      ({ _id, purchasePrice, salePrice, quantity, expiration, brand, batch }) => ({
         sku: _id,
         itemPurchasePrice: purchasePrice,
         itemSalePrice: salePrice,
         quantity,
         expiration,
         brand,
+        batch,
       })
     );
 

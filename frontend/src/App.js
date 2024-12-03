@@ -39,6 +39,9 @@ import AddItem from "./pages/addItem/AddItem";
 import Budgets from "./pages/budgets/Budgets";
 import AddBudget from "./pages/addBudget/AddBudget";
 import BudgetDetail from "./components/budget/budgetDetail/BudgetDetail";
+import BudgetModified from "./components/budget/BudgetModified/BudgetModified";
+import Sales from "./pages/sales/Sales";
+import SaleDetail from "./components/sale/saleDetail/SaleDetail";
 
 axios.defaults.withCredentials = true;
 
@@ -319,6 +322,36 @@ function App() {
             <Sidebar>
               <Layout>
                 <BudgetDetail />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/budget-modified/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <BudgetModified />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/sales"
+          element={
+            <Sidebar>
+              <Layout>
+                <Sales />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/sale/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <SaleDetail />
               </Layout>
             </Sidebar>
           }

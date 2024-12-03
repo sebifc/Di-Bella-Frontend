@@ -20,6 +20,7 @@
   --color-primary: #007bff;
   --color-success: #28a745;
   --color-danger: orangered;
+  --color-info: #17a2b8;
 }
 
 * {
@@ -63,7 +64,8 @@ section {
   .header,
   .print-footer,
   .print-info,
-  .print-buttons {
+  .print-buttons,
+  .hide-print {
     display: none !important;
   }
 }
@@ -351,9 +353,14 @@ p {
   color: #fff;
   background: #007bff;
 }
+.--btn-primary-outline {
+  color: #007bff;
+  background: transparent;
+  border: 1px solid #007bff;
+}
 .--btn-secondary {
-  color: #fff;
-  border: 1px solid #fff;
+  color: black;
+  border: 1px solid black;
   background: transparent;
 }
 .--btn-danger {

@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useRedirectLoggedOutUser from "../../../customHook/useRedirectLoggedOutUser";
 import { selectIsLoggedIn } from "../../../redux/features/auth/authSlice";
-import { getBudget } from "../../../redux/features/budgets/budgetSlice";
+import {
+  cancelBudget,
+  approveBudget,
+  getBudget,
+} from "../../../redux/features/budgets/budgetSlice";
 import Card from "../../card/Card";
 import { SpinnerImg } from "../../loader/Loader";
 import "./BudgetDetail.scss";
 import moment from "moment";
 import { AiFillFilePdf } from "react-icons/ai";
+import { confirmAlert } from "react-confirm-alert";
 
 const ProspectStatusValues = Object.freeze({
   0: "Borrador",
@@ -35,6 +40,7 @@ const Sellers = {
 const BudgetDetail = () => {
   useRedirectLoggedOutUser("/login");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { id } = useParams();
 
@@ -72,6 +78,56 @@ const BudgetDetail = () => {
     };
   }, []);
 
+  const confirmRefused = () => {
+    confirmAlert({
+      title: "Cancelar Presupuesto",
+      message: "¿Desea cancelar el presupuesto?",
+      buttons: [
+        {
+          label: "Si, cancelar",
+          onClick: async () => {
+            await dispatch(cancelBudget(id));
+            dispatch(getBudget(id));
+          },
+        },
+        {
+          label: "Cerrar",
+        },
+      ],
+    });
+  };
+
+  const confirmApprove = () => {
+    confirmAlert({
+      title: "Aprobar Presupuesto",
+      message: "¿Desea aprobar el presupuesto?",
+      buttons: [
+        {
+          label: "Aprobar",
+          onClick: async () => {
+            await dispatch(approveBudget(id));
+            navigate("/sales");
+          },
+        },
+        {
+          label: "Cerrar",
+        },
+      ],
+    });
+  };
+
+  const setColorStatus = (status) => {
+    if (status === 0) {
+      return "var(--color-info)";
+    } else if (status === 1) {
+      return "var(--color-danger)";
+    } else if (status === 2) {
+      return "var(--color-success)";
+    } else if (status === 3) {
+      return "var(--color-primary)";
+    }
+  };
+
   return (
     <div className="budget-detail --mt">
       <div className="print-buttons budget-detail__header">
@@ -99,6 +155,35 @@ const BudgetDetail = () => {
           <AiFillFilePdf className="--ml" />
         </button>
       </div>
+      {budget && budget.prospectStatus === 0 && (
+        <div className="hide-print budget-detail__header">
+          <p>Cambiar estado a:</p>
+          <button
+            type="button"
+            className="--btn --btn-secondary"
+            onClick={confirmRefused}
+          >
+            Rechazado
+          </button>
+          <button
+            type="button"
+            className="--btn --btn-primary"
+            onClick={confirmApprove}
+          >
+            Aprobado
+          </button>
+
+          <Link to={`/budget-modified/${id}`}>
+            <button
+              type="button"
+              className="--btn --btn-primary-outline"
+              onClick={() => {}}
+            >
+              Aprobado con Modificaciones
+            </button>
+          </Link>
+        </div>
+      )}
       <Card cardClass="card">
         {isLoading && <SpinnerImg />}
         {budget && (
@@ -117,7 +202,9 @@ const BudgetDetail = () => {
               </p>
               <p>
                 <b>&rarr; Estado : </b>{" "}
-                {ProspectStatusValues[budget.prospectStatus]}
+                <span style={{ color: setColorStatus(budget.prospectStatus) }}>
+                  {ProspectStatusValues[budget.prospectStatus]}
+                </span>
               </p>
               <p>
                 <b>&rarr; Metodo de pago : </b>{" "}

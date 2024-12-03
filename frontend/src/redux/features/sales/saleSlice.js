@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import budgetService from "./budgetService";
+import saleService from "./saleService";
 import { toast } from "react-toastify";
 
 const initialState = {
-  budget: null,
-  budgets: [],
+  sale: null,
+  sales: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -14,12 +14,12 @@ const initialState = {
   category: [],
 };
 
-// Create New Budget
-export const createBudget = createAsyncThunk(
-  "budgets/create",
+// Create New Sale
+export const createSale = createAsyncThunk(
+  "sales/create",
   async (formData, thunkAPI) => {
     try {
-      return await budgetService.createBudget(formData);
+      return await saleService.createSale(formData);
     } catch (error) {
       const message =
         (error.response &&
@@ -33,12 +33,12 @@ export const createBudget = createAsyncThunk(
   }
 );
 
-// Get all budgets
-export const getBudgets = createAsyncThunk(
-  "budgets/getAll",
+// Get all sales
+export const getSales = createAsyncThunk(
+  "sales/getAll",
   async (_, thunkAPI) => {
     try {
-      return await budgetService.getBudgets();
+      return await saleService.getSales();
     } catch (error) {
       const message =
         (error.response &&
@@ -52,12 +52,11 @@ export const getBudgets = createAsyncThunk(
   }
 );
 
-// Delete a Budget
-export const deleteBudget = createAsyncThunk(
-  "budgets/delete",
-  async (id, thunkAPI) => {
+export const updateSale = createAsyncThunk(
+  "sales/updateSale",
+  async ({ id, formData }, thunkAPI) => {
     try {
-      return await budgetService.deleteBudget(id);
+      return await saleService.updateSale(id, formData);
     } catch (error) {
       const message =
         (error.response &&
@@ -71,47 +70,12 @@ export const deleteBudget = createAsyncThunk(
   }
 );
 
-// Get a budget
-export const getBudget = createAsyncThunk(
-  "budgets/getBudget",
+// Delete a Sale
+export const deleteSale = createAsyncThunk(
+  "sales/delete",
   async (id, thunkAPI) => {
     try {
-      return await budgetService.getBudget(id);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      console.log(message);
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-// Update budget
-export const cancelBudget = createAsyncThunk(
-  "budgets/cancelBudget",
-  async (id, thunkAPI) => {
-    try {
-      return await budgetService.cancelBudget(id);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      console.log(message);
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-export const approveBudget = createAsyncThunk(
-  "budgets/approveBudget",
-  async (id, thunkAPI) => {
-    try {
-      return await budgetService.approveBudget(id);
+      return await saleService.deleteSale(id);
     } catch (error) {
       const message =
         (error.response &&
@@ -125,97 +89,101 @@ export const approveBudget = createAsyncThunk(
   }
 );
 
-const budgetSlice = createSlice({
-  name: "budget",
+// Get a sale
+export const getSale = createAsyncThunk(
+  "sales/getSale",
+  async (id, thunkAPI) => {
+    try {
+      return await saleService.getSale(id);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      console.log(message);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+const saleSlice = createSlice({
+  name: "sale",
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(createBudget.pending, (state) => {
+      .addCase(createSale.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createBudget.fulfilled, (state, action) => {
+      .addCase(createSale.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.budgets.push(action.payload);
-        toast.success("Budget added successfully");
+        state.sales.push(action.payload);
+        toast.success("Sale added successfully");
       })
-      .addCase(createBudget.rejected, (state, action) => {
+      .addCase(createSale.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(getBudgets.pending, (state) => {
+      .addCase(getSales.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getBudgets.fulfilled, (state, action) => {
+      .addCase(getSales.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.budgets = action.payload;
+        state.sales = action.payload;
       })
-      .addCase(getBudgets.rejected, (state, action) => {
+      .addCase(getSales.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(deleteBudget.pending, (state) => {
+      .addCase(deleteSale.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteBudget.fulfilled, (state, action) => {
+      .addCase(deleteSale.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        toast.success("Budget deleted successfully");
+        toast.success("Sale deleted successfully");
       })
-      .addCase(deleteBudget.rejected, (state, action) => {
+      .addCase(deleteSale.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(getBudget.pending, (state) => {
+      .addCase(getSale.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getBudget.fulfilled, (state, action) => {
+      .addCase(getSale.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.budget = action.payload;
+        state.sale = action.payload;
       })
-      .addCase(getBudget.rejected, (state, action) => {
+      .addCase(getSale.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(cancelBudget.pending, (state) => {
+      .addCase(updateSale.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(cancelBudget.fulfilled, (state, action) => {
+      .addCase(updateSale.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        toast.success("Presupuesto cancelado, el stock se ha restablecido");
+        toast.success("Se actualzo la venta");
       })
-      .addCase(cancelBudget.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-        toast.error(action.payload);
-      })
-      .addCase(approveBudget.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(approveBudget.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.isError = false;
-        toast.success("Presupuesto aprobado");
-      })
-      .addCase(approveBudget.rejected, (state, action) => {
+      .addCase(updateSale.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
@@ -224,10 +192,10 @@ const budgetSlice = createSlice({
   },
 });
 
-export const selectIsLoading = (state) => state.budget.isLoading;
-export const selectBudget = (state) => state.budget.budget;
-export const selectTotalStoreValue = (state) => state.budget.totalStoreValue;
-export const selectOutOfStock = (state) => state.budget.outOfStock;
-export const selectCategory = (state) => state.budget.category;
+export const selectIsLoading = (state) => state.sale.isLoading;
+export const selectSale = (state) => state.sale.sale;
+export const selectTotalStoreValue = (state) => state.sale.totalStoreValue;
+export const selectOutOfStock = (state) => state.sale.outOfStock;
+export const selectCategory = (state) => state.sale.category;
 
-export default budgetSlice.reducer;
+export default saleSlice.reducer;
