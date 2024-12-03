@@ -90,11 +90,45 @@ export const getBudget = createAsyncThunk(
   }
 );
 // Update budget
-export const updateBudget = createAsyncThunk(
-  "budgets/updateBudget",
-  async ({ id, formData }, thunkAPI) => {
+export const cancelBudget = createAsyncThunk(
+  "budgets/cancelBudget",
+  async (id, thunkAPI) => {
     try {
-      return await budgetService.updateBudget(id, formData);
+      return await budgetService.cancelBudget(id);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      console.log(message);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const approveBudget = createAsyncThunk(
+  "budgets/approveBudget",
+  async (id, thunkAPI) => {
+    try {
+      return await budgetService.approveBudget(id);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      console.log(message);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const approvedModificationsBudget = createAsyncThunk(
+  "budgets/approveModifiactions",
+  async (id, thunkAPI) => {
+    try {
+      return await budgetService.approvedModificationsBudget(id);
     } catch (error) {
       const message =
         (error.response &&
@@ -174,16 +208,48 @@ const budgetSlice = createSlice({
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(updateBudget.pending, (state) => {
+      .addCase(cancelBudget.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(updateBudget.fulfilled, (state, action) => {
+      .addCase(cancelBudget.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        toast.success("Budget updated successfully");
+        toast.success("Presupuesto cancelado, el stock se ha restablecido");
       })
-      .addCase(updateBudget.rejected, (state, action) => {
+      .addCase(cancelBudget.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+      .addCase(approveBudget.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(approveBudget.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        toast.success("Presupuesto aprobado");
+      })
+      .addCase(approveBudget.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+      .addCase(approvedModificationsBudget.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(approvedModificationsBudget.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        toast.success(
+          "Se cambio el estado del presupuesto a aprobado con modificaciones"
+        );
+      })
+      .addCase(approvedModificationsBudget.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

@@ -1,4 +1,4 @@
-.budget-detail {
+.sale-detail {
   margin-bottom: 5rem;
   width: 100%;
   max-width: 900px;
@@ -83,6 +83,25 @@
         }
       }
     }
+  }
+
+  label {
+    display: block;
+    font-size: 1.4rem;
+    color: var(--color-dark);
+    margin-bottom: 2px !important;
+    font-weight: 700;
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    font-size: 1.5rem;
+    font-weight: 300;
+    padding: 1rem;
+    border: 1px solid #777;
+    border-radius: 3px;
+    outline: none;
+    width: 30%;
   }
 }
 

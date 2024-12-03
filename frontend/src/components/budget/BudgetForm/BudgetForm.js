@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import Card from "../../card/Card";
 
@@ -7,6 +7,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import Modal from "../../Modal/Modal";
 import stockService from "../../../redux/features/stock/stockServices";
 import moment from "moment";
+import { batch } from "react-redux";
 
 const BudgetForm = ({
   budget,
@@ -15,6 +16,7 @@ const BudgetForm = ({
   clients,
   setBudget,
   items,
+  isEdit = false,
 }) => {
   const ProspectStatus = {
     0: "Borrador",
@@ -81,8 +83,9 @@ const BudgetForm = ({
       quantity: parseInt(checkStock.quantity),
       purchasePrice: response.stockInfo.purchasePrice,
       brand: response.stockInfo.brand,
+      batch: response.stockInfo.batch,
       salePrice: response.item?.itemSalePrice ?? 0,
-      total: 0,
+      total: response.item?.itemSalePrice * parseInt(checkStock.quantity),
     };
 
     if (response.available) {
@@ -118,6 +121,28 @@ const BudgetForm = ({
     }).format(number);
   };
 
+  useEffect(() => {
+    if (isEdit) {
+      setItemsBudget(
+        budget.items.map((item) => ({
+          _id: item.sku._id,
+          sku: item.sku.sku,
+          category: item.sku.category,
+          itemId: item.sku.itemId,
+          presentation: item.sku.presentation,
+          itemSalePrice: item.itemSalePrice,
+          expiration: item.expiration,
+          quantity: item.quantity,
+          purchasePrice: item.itemPurchasePrice,
+          brand: item.brand,
+          batch: item.batch,
+          salePrice: item.itemSalePrice,
+          total: item.itemSalePrice * item.quantity,
+        }))
+      );
+    }
+  }, [isEdit, budget.items]);
+
   return (
     <div className="add-budget">
       <Card cardClass={"card"}>
@@ -125,7 +150,7 @@ const BudgetForm = ({
           <label>Cliente:</label>
           <select
             name="client"
-            value={budget.client}
+            value={isEdit ? budget.client._id : budget.client}
             onChange={(e) => {
               handleInputChange(e);
               const client = clients.find(
@@ -151,8 +176,9 @@ const BudgetForm = ({
           <label>Estado del Prospecto:</label>
           <select
             name="status"
-            value={budget.status}
+            value={isEdit ? 3 : budget.status}
             onChange={handleInputChange}
+            disabled={isEdit}
           >
             <option selected value="" disabled>
               -- Seleccione --
@@ -384,7 +410,9 @@ const BudgetForm = ({
                 saveBudget(itemsBudget);
               }}
             >
-              Crear Presupuesto
+              {isEdit
+                ? "Aprobar presupuesto con modifaciones y crear venta"
+                : "Crear Presupuesto"}
             </button>
           </div>
         </form>

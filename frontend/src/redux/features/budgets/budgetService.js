@@ -26,9 +26,19 @@ const getBudget = async (id) => {
   const response = await axios.get(API_URL + id);
   return response.data;
 };
-// Update Budget
-const updateBudget = async (id, formData) => {
-  const response = await axios.patch(`${API_URL}${id}`, formData);
+
+const cancelBudget = async (id) => {
+  const response = await axios.put(`${API_URL}cancel/${id}`);
+  return response.data;
+};
+
+const approveBudget = async (id) => {
+  const response = await axios.put(`${API_URL}approve/${id}`);
+  return response.data;
+};
+
+const approvedModificationsBudget = async (id) => {
+  const response = await axios.put(`${API_URL}approve-modifications/${id}`);
   return response.data;
 };
 
@@ -37,7 +47,9 @@ const budgetservice = {
   getBudgets,
   getBudget,
   deleteBudget,
-  updateBudget,
+  cancelBudget,
+  approveBudget,
+  approvedModificationsBudget,
 };
 
 export default budgetservice;
