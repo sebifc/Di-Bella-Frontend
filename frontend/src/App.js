@@ -42,6 +42,8 @@ import BudgetDetail from "./components/budget/budgetDetail/BudgetDetail";
 import BudgetModified from "./components/budget/BudgetModified/BudgetModified";
 import Sales from "./pages/sales/Sales";
 import SaleDetail from "./components/sale/saleDetail/SaleDetail";
+import Remitos from "./pages/remitos/Remitos";
+import RemitoDetail from "./components/remito/remitoDetail/RemitoDetail";
 
 axios.defaults.withCredentials = true;
 
@@ -352,6 +354,26 @@ function App() {
             <Sidebar>
               <Layout>
                 <SaleDetail />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/remitos"
+          element={
+            <Sidebar>
+              <Layout>
+                <Remitos />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/remito/:id"
+          element={
+            <Sidebar>
+              <Layout>
+                <RemitoDetail />
               </Layout>
             </Sidebar>
           }
