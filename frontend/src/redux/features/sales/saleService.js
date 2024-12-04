@@ -32,12 +32,24 @@ const updateSale = async (id, formData) => {
   return response.data;
 };
 
+const getPendingItems = async (id) => {
+  const response = await axios.get(`${API_URL}pending-items/${id}`);
+  return response.data;
+};
+
+const createRemito = async (data) => {
+  const response = await axios.post(`${API_URL}create-remito`, data);
+  return response.data;
+};
+
 const saleservice = {
   createSale,
   getSales,
   getSale,
   deleteSale,
   updateSale,
+  getPendingItems,
+  createRemito,
 };
 
 export default saleservice;

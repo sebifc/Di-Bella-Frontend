@@ -8,6 +8,7 @@ const initialState = {
   filteredItems: [],
   filteredBudgets: [],
   filteredSales: [],
+  filteredRemitos: [],
 };
 
 const filterSlice = createSlice({
@@ -78,6 +79,10 @@ const filterSlice = createSlice({
       const { sales, search } = action.payload;
       state.filteredSales = sales;
     },
+    FILTER_REMITOS(state, action) {
+      const { remitos, search } = action.payload;
+      state.filteredRemitos = remitos;
+    },
   },
 });
 
@@ -89,6 +94,7 @@ export const {
   FILTER_ITEMS,
   FILTER_BUDGETS,
   FILTER_SALES,
+  FILTER_REMITOS,
 } = filterSlice.actions;
 
 export const selectFilteredPoducts = (state) => state.filter.filteredProducts;
@@ -99,5 +105,6 @@ export const selectFilteredOrders = (state) => state.filter.filteredOrders;
 export const selectFilteredItems = (state) => state.filter.filteredItems;
 export const selectFilteredBudgets = (state) => state.filter.filteredBudgets;
 export const selectFilteredSales = (state) => state.filter.filteredSales;
+export const selectFilteredRemitos = (state) => state.filter.filteredRemitos;
 
 export default filterSlice.reducer;

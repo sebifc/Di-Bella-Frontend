@@ -51,6 +51,11 @@ const menu = [
     path: "/sales",
   },
   {
+    title: "Remitos",
+    icon: <FaReceipt />,
+    path: "/remitos",
+  },
+  {
     title: "Cuenta",
     icon: <FaRegChartBar />,
     childrens: [

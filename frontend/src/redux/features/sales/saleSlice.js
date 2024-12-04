@@ -108,6 +108,25 @@ export const getSale = createAsyncThunk(
   }
 );
 
+// Get pending items
+export const getPendingItems = createAsyncThunk(
+  "sales/getPendingItems",
+  async (id, thunkAPI) => {
+    try {
+      return await saleService.getPendingItems(id);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      console.log(message);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const saleSlice = createSlice({
   name: "sale",
   initialState,
@@ -169,6 +188,21 @@ const saleSlice = createSlice({
         state.sale = action.payload;
       })
       .addCase(getSale.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        toast.error(action.payload);
+      })
+      .addCase(getPendingItems.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getPendingItems.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.sale = action.payload;
+      })
+      .addCase(getPendingItems.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

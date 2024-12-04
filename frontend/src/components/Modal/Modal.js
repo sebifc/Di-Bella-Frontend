@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import "./Modal.scss";
-const Modal = ({ openModal, closeModal, children }) => {
+const Modal = ({ openModal, closeModal, maxWidth, children }) => {
   const ref = useRef();
 
   useEffect(() => {
@@ -13,7 +13,12 @@ const Modal = ({ openModal, closeModal, children }) => {
   }, [openModal]);
 
   return (
-    <dialog className="modal" ref={ref} onCancel={closeModal}>
+    <dialog
+      className="modal"
+      style={{ maxWidth }}
+      ref={ref}
+      onCancel={closeModal}
+    >
       {children}
     </dialog>
   );

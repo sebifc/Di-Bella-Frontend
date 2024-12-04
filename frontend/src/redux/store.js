@@ -8,6 +8,7 @@ import orderReducer from "./features/order/orderSlice";
 import itemReducer from "./features/items/itemSlice";
 import budgetReducer from "./features/budgets/budgetSlice";
 import saleReducer from "./features/sales/saleSlice";
+import remitoReducer from "./features/remitos/remitoSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,5 +21,6 @@ export const store = configureStore({
     item: itemReducer,
     budget: budgetReducer,
     sale: saleReducer,
+    remito: remitoReducer,
   },
 });

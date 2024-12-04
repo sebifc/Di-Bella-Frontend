@@ -7,18 +7,18 @@ import { FaTrashAlt } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { deleteSale, getSales } from "../../../redux/features/sales/saleSlice";
+import { deleteRemito, getRemitos } from "../../../redux/features/remitos/remitoSlice";
 import {
-  FILTER_SALES,
-  selectFilteredSales,
+  FILTER_REMITOS,
+  selectFilteredRemitos,
 } from "../../../redux/features/product/filterSlice";
 import { SpinnerImg } from "../../loader/Loader";
 import Search from "../../search/Search";
-import "./SaleList.scss";
+import "./RemitoList.scss";
 
-const SaleList = ({ sales, isLoading }) => {
+const RemitoList = ({ remitos, isLoading }) => {
   const [search, setSearch] = useState("");
-  const filteredSales = useSelector(selectFilteredSales);
+  const filteredRemitos = useSelector(selectFilteredRemitos);
 
   const dispatch = useDispatch();
 
@@ -30,54 +30,41 @@ const SaleList = ({ sales, isLoading }) => {
     4: "Cheque a 60 dias",
   });
 
-  const Sellers = {
-    0: "DIANA COCH",
-    1: "FERNANDO PAZZANO",
-    2: "LUCILA DI BELLA",
-    3: "VENDEDOR EXTERNO",
-  };
-
-  const StatusSale = {
-    0: "Borrador",
-    1: "Entregado",
-    2: "Cancelado",
-  };
-
   //   Begin Pagination
-  const [currentSales, setCurrentSales] = useState([]);
+  const [currentRemitos, setCurrentRemitos] = useState([]);
   const [pageCount, setPageCount] = useState(0);
-  const [saleOffset, setSaleOffset] = useState(0);
-  const salesPerPage = 10;
+  const [remitoOffset, setRemitoOffset] = useState(0);
+  const remitosPerPage = 10;
 
   useEffect(() => {
-    const endOffset = saleOffset + salesPerPage;
+    const endOffset = remitoOffset + remitosPerPage;
 
-    setCurrentSales(filteredSales.slice(saleOffset, endOffset));
-    setPageCount(Math.ceil(filteredSales.length / salesPerPage));
-  }, [saleOffset, salesPerPage, filteredSales]);
+    setCurrentRemitos(filteredRemitos.slice(remitoOffset, endOffset));
+    setPageCount(Math.ceil(filteredRemitos.length / remitosPerPage));
+  }, [remitoOffset, remitosPerPage, filteredRemitos]);
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * salesPerPage) % filteredSales.length;
-    setSaleOffset(newOffset);
+    const newOffset = (event.selected * remitosPerPage) % filteredRemitos.length;
+    setRemitoOffset(newOffset);
   };
 
   useEffect(() => {
-    dispatch(FILTER_SALES({ sales, search }));
-  }, [sales, search, dispatch]);
+    dispatch(FILTER_REMITOS({ remitos, search }));
+  }, [remitos, search, dispatch]);
 
   return (
-    <div className="sale-list">
+    <div className="remito-list">
       <hr />
       <div className="table">
         <div className="--flex-between --flex-dir-column">
           <span>
-            <h3>Ventas</h3>
+            <h3>Remitos</h3>
           </span>
           <span>
             <Search
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={"Buscar sale"}
+              placeholder={"Buscar remito"}
             />
           </span>
         </div>
@@ -85,44 +72,41 @@ const SaleList = ({ sales, isLoading }) => {
         {isLoading && <SpinnerImg />}
 
         <div className="table">
-          {!isLoading && sales.length === 0 ? (
-            <p>-- No sale found, please add a sale...</p>
+          {!isLoading && remitos.length === 0 ? (
+            <p>-- No remito found, please add a remito...</p>
           ) : (
             <table>
               <thead>
                 <tr>
                   <th>N°</th>
+                  <th>N° de Venta</th>
                   <th>Cliente</th>
                   <th>Fecha</th>
                   <th>Metodo de pago</th>
-                  <th>Vendedor</th>
-                  <th>Estado</th>
                   <th>Accion</th>
                 </tr>
               </thead>
 
               <tbody>
-                {currentSales.map((sale, index) => {
+                {currentRemitos.map((remito, index) => {
                   const {
                     _id,
-                    saleId,
+                    remitoId,
                     client,
-                    saleDate,
+                    remitoDate,
                     paymentMethod,
-                    seller,
-                    status,
-                  } = sale;
+                    sale,
+                  } = remito;
                   return (
                     <tr key={_id}>
-                      <td>{saleId}</td>
+                      <td>{remitoId}</td>
+                      <td>{sale.saleId}</td>
                       <td>{client.name}</td>
-                      <td>{moment(saleDate).format("DD/MM/YYYY")}</td>
+                      <td>{moment(remitoDate).format("DD/MM/YYYY")}</td>
                       <td>{PaymentMethodsValues[paymentMethod]}</td>
-                      <td>{Sellers[seller]}</td>
-                      <td>{StatusSale[status]}</td>
                       <td className="icons">
                         <span>
-                          <Link to={`/sale/${_id}`}>
+                          <Link to={`/remito/${_id}`}>
                             <AiOutlineEye size={25} color={"purple"} />
                           </Link>
                         </span>
@@ -153,4 +137,4 @@ const SaleList = ({ sales, isLoading }) => {
   );
 };
 
-export default SaleList;
+export default RemitoList;
