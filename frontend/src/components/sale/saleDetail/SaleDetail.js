@@ -35,8 +35,8 @@ const SALE_DATA = {
 
 const StatusSale = {
   0: "Borrador",
-  1: "Entregado",
-  2: "Cancelado",
+  1: "Venta cerrada - esperando generar remitos",
+  2: "Venta cerrada - remitos generados",
 };
 
 const SaleDetail = () => {
@@ -142,6 +142,16 @@ const SaleDetail = () => {
     }
   };
 
+  const setColorStatus = (status) => {
+    if (status === 0) {
+      return "var(--color-info)";
+    } else if (status === 1) {
+      return "var(--color-danger)";
+    } else if (status === 2) {
+      return "var(--color-success)";
+    }
+  };
+
   return (
     <div className="sale-detail --mt">
       <Card cardClass="card">
@@ -158,7 +168,9 @@ const SaleDetail = () => {
               </p>
               <p>
                 <b>&rarr; Estado : </b>{" "}
-                {StatusSale[sale.status]}
+                <span style={{ color: setColorStatus(sale.status) }}>
+                  {StatusSale[sale.status]}
+                </span>
               </p>
               <p>
                 <b>&rarr; Fecha : </b>{" "}

@@ -39,8 +39,8 @@ const SaleList = ({ sales, isLoading }) => {
 
   const StatusSale = {
     0: "Borrador",
-    1: "Entregado",
-    2: "Cancelado",
+    1: "Venta cerrada - esperando generar remitos",
+    2: "Venta cerrada - remitos generados",
   };
 
   //   Begin Pagination
