@@ -41,7 +41,7 @@ const BudgetList = ({ budgets, isLoading }) => {
   });
 
   const Sellers = {
-    0: "DIANA COCH",
+    0: "CONSTANZA CONTENTI",
     1: "FERNANDO PAZZANO",
     2: "LUCILA DI BELLA",
     3: "VENDEDOR EXTERNO",

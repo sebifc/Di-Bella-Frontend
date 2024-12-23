@@ -68,6 +68,10 @@ section {
   .hide-print {
     display: none !important;
   }
+
+  .show-print {
+    display: flex !important;
+  }
 }
 
 /* UTILITY CLASSES */
