@@ -20,6 +20,8 @@ const initialState = {
   type: 0,
   code: "",
   description: "",
+  cbu: 0,
+  alias: "",
 };
 
 const AddSupplier = () => {
@@ -48,6 +50,8 @@ const AddSupplier = () => {
     formData.append("type", supplier?.type);
     formData.append("code", supplier?.code);
     formData.append("description", supplier?.description);
+    formData.append("cbu", supplier?.cbu);
+    formData.append("alias", supplier?.alias);
 
     await dispatch(createSupplier(formData));
 

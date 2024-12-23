@@ -8,6 +8,7 @@ import Card from "../../card/Card";
 import { SpinnerImg } from "../../loader/Loader";
 import "./RemitoDetail.scss";
 import moment from "moment";
+import { AiFillFilePdf } from "react-icons/ai";
 
 const PaymentMethodsValues = Object.freeze({
   0: "Efectivo contra entrega",
@@ -51,6 +52,18 @@ const RemitoDetail = () => {
 
   return (
     <div className="remito-detail --mt">
+      <div className="print-buttons budget-detail__header">
+        <button
+          type="button"
+          className="--btn --btn-danger"
+          onClick={() => {
+            window.print();
+          }}
+        >
+          Exportar PDF
+          <AiFillFilePdf className="--ml" />
+        </button>
+      </div>
       <Card cardClass="card">
         {isLoading && <SpinnerImg />}
         {remito && (
@@ -66,7 +79,7 @@ const RemitoDetail = () => {
               <p>
                 <b>&rarr; Cliente : </b> {remito.client.name}
               </p>
-              <p>
+              <p className="hide-print">
                 <b>&rarr; Fecha : </b>{" "}
                 {moment(remito.remitoDate).format("DD/MM/YYYY")}
               </p>
@@ -114,6 +127,18 @@ const RemitoDetail = () => {
                       ))}
                   </tbody>
                 </table>
+              </div>
+
+              <div class="signatures show-print">
+                <div className="signature">
+                  <span>Fecha</span>
+                </div>
+                <div className="signature">
+                  <span>Aclaracion</span>
+                </div>
+                <div className="signature">
+                  <span>Firma</span>
+                </div>
               </div>
 
               <div className="print-info">

@@ -44,6 +44,7 @@ import Sales from "./pages/sales/Sales";
 import SaleDetail from "./components/sale/saleDetail/SaleDetail";
 import Remitos from "./pages/remitos/Remitos";
 import RemitoDetail from "./components/remito/remitoDetail/RemitoDetail";
+import Valued from "./pages/valued/Valued";
 
 axios.defaults.withCredentials = true;
 
@@ -374,6 +375,16 @@ function App() {
             <Sidebar>
               <Layout>
                 <RemitoDetail />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/valued"
+          element={
+            <Sidebar>
+              <Layout>
+                <Valued />
               </Layout>
             </Sidebar>
           }

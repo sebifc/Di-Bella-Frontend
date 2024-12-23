@@ -75,7 +75,14 @@ const BudgetForm = ({
   };
 
   const addItem = async () => {
+    /* MODIFICAR ACA EL PRECIO DEL ITEM DEPENIENDO LA MARCA */
     const response = await stockService.getInfoAndPrice(checkStock.sku);
+
+    let priceBrand = response.item.itemSalePrices.find(
+      (price) => price.brand === response.stockInfo.brand
+    );
+
+    priceBrand = priceBrand ? priceBrand.price : 0;
 
     const item = {
       ...response.item,
@@ -84,8 +91,8 @@ const BudgetForm = ({
       purchasePrice: response.stockInfo.purchasePrice,
       brand: response.stockInfo.brand,
       batch: response.stockInfo.batch,
-      salePrice: response.item?.itemSalePrice ?? 0,
-      total: response.item?.itemSalePrice * parseInt(checkStock.quantity),
+      salePrice: priceBrand ?? 0,
+      total: priceBrand * parseInt(checkStock.quantity),
     };
 
     if (response.available) {

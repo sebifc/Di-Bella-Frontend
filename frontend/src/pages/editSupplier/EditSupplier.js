@@ -48,6 +48,8 @@ const EditSupplier = () => {
     formData.append("type", supplier?.type);
     formData.append("code", supplier?.code);
     formData.append("description", supplier?.description);
+    formData.append("cbu", supplier?.cbu);
+    formData.append("alias", supplier?.alias);
 
     await dispatch(updateSupplier({ id, formData }));
     await dispatch(getSuppliers());
