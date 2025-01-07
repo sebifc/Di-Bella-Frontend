@@ -229,7 +229,7 @@ const OrderForm = ({
               </option>
               {items.map((sku) => (
                 <option key={sku._id} value={sku._id}>
-                  {sku.sku} - {sku.category} - {sku.presentation}
+                  {sku.sku} - {sku.description} - {sku.presentation}
                 </option>
               ))}
             </select>
